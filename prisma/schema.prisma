@@ -31,5 +31,155 @@ model usuario {
   nombre String
   email String
   contrasenia String
+  rol rol_usuario
+
+  // Relacion con comanda
+  comandas comanda[]
+
+  // Relacion con detalle_comanda
+  detalles_comanda detalle_comanda[]
 }
 
+enum rol_usuario {
+  Administrador
+  Mozo
+  Cocinero
+}
+
+model medio_de_pago {
+  id Int @id @default(autoincrement())
+  tipo tipo_pago
+
+  // Relacion con comanda
+  comandas comanda[]
+}
+
+enum tipo_pago {
+  Efectivo
+  Transferencia
+  Tarjeta
+}
+
+model reserva {
+  id Int @id @default(autoincrement())
+  fecha DateTime
+  nombre_cliente String
+  telefono_cliente String
+  estado estado_reserva
+  motivo_cancelacion String?
+
+  // Relacion con mesa
+  mesas mesa[]
+}
+
+enum estado_reserva {
+  Confirmada
+  Cancelada
+}
+
+model mesa {
+  id Int @id @default(autoincrement())
+  capacidad Int
+
+  // Relacion con comanda 
+  comandas comanda[]
+
+  // Relacion con reserva
+  reservas reserva[]
+}
+
+model comanda {
+  id Int @id @default(autoincrement())
+  fecha DateTime
+  estado estado_comanda @default(Abierta) // <-- AGREGA ESTA LÍNEA
+
+  // Relacion con mesa
+  id_mesa Int
+  mesa mesa @relation(fields: [id_mesa], references: [id])
+
+  // Relacion con mozo
+  id_mozo Int
+  mozo usuario @relation(fields: [id_mozo], references: [id])
+
+  // Relacion con medio_pago
+  id_medio_pago Int?
+  medio_pago medio_de_pago? @relation(fields: [id_medio_pago], references: [id])
+
+  // Relacion con detalle_comanda
+  detalles_comandas detalle_comanda[]
+}
+
+enum estado_comanda {
+  Abierta     // El cliente está comiendo / pidiendo platos
+  Pagada      // El cliente ya pagó y se cerró la mesa
+  Cancelada   // Hubo un error y se anuló la comanda
+}
+
+
+
+
+model producto {
+  id Int @id @default(autoincrement())
+  nombre String
+  descripcion String
+  tipo tipo_producto
+
+  //Relacion con categoria
+  id_categoria Int
+  categoria categoria @relation(fields: [id_categoria],references: [id])
+
+  //Relacion con precio_producto
+  precios precio_producto[]
+
+
+  // Relacion con detalle_comanda
+  detalles_comandas detalle_comanda[]
+}
+
+enum tipo_producto {
+  Plato
+  Bebida
+}
+
+model categoria {
+  id Int @id @default(autoincrement())
+  nombre String
+
+  //Relacion con productos
+  productos producto[]
+}
+
+model precio_producto {
+  @@id([id_producto,fecha_desde])
+  fecha_desde DateTime @default(now())
+  precio  Decimal
+
+  //Relacion con producto
+  id_producto Int
+  producto producto @relation(fields: [id_producto], references: [id], onDelete: Cascade)
+}
+
+model detalle_comanda {
+  cantidad Int
+  estado estado_detalle_comanda
+
+  // Relacion con cocinero
+  id_cocinero Int?
+  cocinero usuario? @relation(fields: [id_cocinero],references: [id])
+
+  // Relacion con comanda
+  id_comanda Int
+  comanda comanda @relation(fields: [id_comanda],references: [id])
+
+  // Relacion con plato
+  id_producto Int
+  producto producto @relation(fields: [id_producto],references: [id])
+
+  @@id([id_comanda,id_producto])
+}
+
+enum estado_detalle_comanda {
+  Pendiente
+  En_Preparacion
+  Finalizada
+}
