@@ -9,6 +9,7 @@ Documento oficial de arquitectura de software, división de módulos, estándare
 ### 🟢 1. DONATO — Módulo: Menú (Productos, Categorías y Precios)
 * **Pantallas asociadas:** PDF 2 (Pág 2, 5, 9 y 10: Vista de Productos, ABM Productos, ABM Categorías).
 * **Modelos Prisma:** `producto`, `categoria`, `precio_producto`
+
 * **Endpoints a desarrollar:**
   * **Categorías:**
     * `GET /api/categorias` — Listar todas las categorías con sus productos.
@@ -84,22 +85,18 @@ Backend/
 ├── src/
 │   ├── config/
 │   │   └── db.ts                      <-- Instancia centralizada de PrismaClient
-│   ├── controllers/                   <-- Lógica de negocio de cada integrante
+│   ├── controllers/                   <-- Manejo de peticiones HTTP (req, res)
 │   │   ├── categorias.controller.ts   (Donato)
-│   │   ├── productos.controller.ts    (Donato)
-│   │   ├── reservas.controller.ts      (Gaspar)
-│   │   ├── mesas.controller.ts         (Gaspar)
-│   │   ├── comandas.controller.ts      (Tomas)
-│   │   ├── usuarios.controller.ts      (Ismael)
-│   │   └── cocina.controller.ts        (Ismael)
-│   ├── routes/                        <-- Definición de rutas Express en TypeScript
+│   │   └── ...
+│   ├── services/                      <-- Lógica de negocio (Plasmado, por ahora actúa de puente)
+│   │   ├── categorias.service.ts      (Donato)
+│   │   └── ...
+│   ├── repositories/                  <-- Acceso a datos con Prisma
+│   │   ├── categorias.repository.ts   (Donato)
+│   │   └── ...
+│   ├── routes/                        <-- Definición de rutas Express
 │   │   ├── categorias.routes.ts       (Donato)
-│   │   ├── productos.routes.ts        (Donato)
-│   │   ├── reservas.routes.ts         (Gaspar)
-│   │   ├── mesas.routes.ts            (Gaspar)
-│   │   ├── comandas.routes.ts         (Tomas)
-│   │   ├── usuarios.routes.ts         (Ismael)
-│   │   └── cocina.routes.ts           (Ismael)
+│   │   └── ...
 │   └── app.ts                         <-- Configuración principal de Express
 ├── .env
 ├── index.ts                           <-- Punto de entrada que levanta el servidor
@@ -107,23 +104,60 @@ Backend/
 └── tsconfig.json                      <-- Configuración de TypeScript
 
 
-Acá tenés un **ejemplo mínimo y directo** de cómo crear un endpoint (GET y POST) con TypeScript y Express. 
+Acá tenés un **ejemplo mínimo y directo** de cómo crear un endpoint (GET y POST) con la arquitectura en capas (Route -> Controller -> Service -> Repository).
 
-Cualquiera de los chicos puede usar esta misma plantilla para su módulo:
+Como acordamos, los **Services** por ahora no tendrán lógica compleja, pero los dejamos "plasmados" actuando como puente entre el Controller y el Repository.
 
 ---
 
-### 1️⃣ El Controlador (`src/controllers/ejemplo.controller.ts`)
-Acá va la lógica (recibir los datos, tiparlos y responder):
+### 1️⃣ El Repositorio (`src/repositories/ejemplo.repository.ts`)
+Acá va EXCLUSIVAMENTE el código que interactúa con la base de datos (Prisma):
+
+```typescript
+import prisma from '../config/db';
+
+export const obtenerEjemplos = async () => {
+  // Ejemplo real: return await prisma.ejemplo.findMany();
+  return [{ mensaje: "API funcionando desde el repository 🚀" }];
+};
+
+export const crearEjemplo = async (nombre: string) => {
+  // Ejemplo real: return await prisma.ejemplo.create({ data: { nombre } });
+  return { id: 1, nombre };
+};
+```
+
+---
+
+### 2️⃣ El Servicio (`src/services/ejemplo.service.ts`)
+Acá iría la lógica de negocio. Por ahora lo dejamos plasmado y solo llama al repositorio:
+
+```typescript
+import * as EjemploRepository from '../repositories/ejemplo.repository';
+
+export const obtenerEjemplos = async () => {
+  return await EjemploRepository.obtenerEjemplos();
+};
+
+export const crearEjemplo = async (nombre: string) => {
+  return await EjemploRepository.crearEjemplo(nombre);
+};
+```
+
+---
+
+### 3️⃣ El Controlador (`src/controllers/ejemplo.controller.ts`)
+Acá solo recibimos la petición HTTP, validamos datos básicos y llamamos al servicio:
 
 ```typescript
 import { Request, Response } from 'express';
+import * as EjemploService from '../services/ejemplo.service';
 
 // GET - Obtener información
 export const getEjemplo = async (req: Request, res: Response): Promise<void> => {
   try {
-    // Ejemplo de respuesta exitosa
-    res.json({ mensaje: "API funcionando correctamente 🚀" });
+    const datos = await EjemploService.obtenerEjemplos();
+    res.json(datos);
   } catch (error) {
     res.status(500).json({ error: "Error interno del servidor" });
   }
@@ -132,19 +166,16 @@ export const getEjemplo = async (req: Request, res: Response): Promise<void> => 
 // POST - Crear / Recibir información
 export const createEjemplo = async (req: Request, res: Response): Promise<void> => {
   try {
-    const { nombre } = req.body; // Leemos el cuerpo del JSON
+    const { nombre } = req.body;
 
     // Validacion simple
     if (!nombre) {
       res.status(400).json({ error: "El campo 'nombre' es obligatorio" });
-      return; // Importante poner return para cortar la ejecución
+      return; 
     }
 
-    // Respuesta
-    res.status(201).json({ 
-      mensaje: "Creado con éxito", 
-      datoRecibido: nombre 
-    });
+    const nuevoDato = await EjemploService.crearEjemplo(nombre);
+    res.status(201).json({ mensaje: "Creado con éxito", dato: nuevoDato });
   } catch (error) {
     res.status(500).json({ error: "Error al guardar los datos" });
   }
@@ -153,7 +184,7 @@ export const createEjemplo = async (req: Request, res: Response): Promise<void> 
 
 ---
 
-### 2️⃣ La Ruta (`src/routes/ejemplo.routes.ts`)
+### 4️⃣ La Ruta (`src/routes/ejemplo.routes.ts`)
 Acá relacionás las URLs con las funciones del controlador:
 
 ```typescript
@@ -163,18 +194,18 @@ import { getEjemplo, createEjemplo } from '../controllers/ejemplo.controller';
 const router = Router();
 
 // Definición de las URLs
-router.get('/', getEjemplo);    // Responde en GET /api/ejemplo
-router.post('/', createEjemplo); // Responde en POST /api/ejemplo
+router.get('/', getEjemplo);
+router.post('/', createEjemplo);
 
 export default router;
 ```
 
 ---
 
-### 💡 Puntos clave a recordar en TypeScript:
-1. Siempre importar `Request` y `Response` de `'express'`.
-2. Tipar los parámetros `(req: Request, res: Response)`.
-3. Si hacés una validación y devolvés un error (`res.status(400)...`), poné un **`return;`** en la línea siguiente para que el código no siga ejecutándose abajo.
+### 💡 Puntos clave a recordar en esta arquitectura:
+1. **Controller**: Solo maneja `req` y `res`. No hace consultas a la BD.
+2. **Service**: Contiene las reglas del negocio. Por ahora solo puentea Controller -> Repository.
+3. **Repository**: Es el ÚNICO que importa y usa `prisma`.
 
 
 Acá tenés el **paso a paso exacto** para crear la estructura de carpetas y archivos iniciales. 
@@ -189,6 +220,8 @@ Dentro de la carpeta `Backend/`, creá las siguientes carpetas:
 * `src/`
   * `src/config/`
   * `src/controllers/`
+  * `src/services/`
+  * `src/repositories/`
   * `src/routes/`
 
 ---
@@ -356,10 +389,10 @@ git pull origin main
 git checkout -b <su-rama>
 ```
 
-Y a partir de ahí:
-* **Donato** solo crea `categorias.controller.ts` y edita `categorias.routes.ts`.
-* **Gaspar** solo crea `mesas.controller.ts` y edita `mesas.routes.ts`.
-* **Tomas** solo crea `comandas.controller.ts` y edita `comandas.routes.ts`.
-* **Ismael** solo crea `usuarios.controller.ts` y edita `usuarios.routes.ts`.
+Y a partir de ahí (por ejemplo, con sus respectivos módulos):
+* **Donato** crea `categorias.repository.ts`, `categorias.service.ts`, `categorias.controller.ts` y edita `categorias.routes.ts`.
+* **Gaspar** crea `mesas.repository.ts`, `mesas.service.ts`, `mesas.controller.ts` y edita `mesas.routes.ts`.
+* **Tomas** crea `comandas.repository.ts`, `comandas.service.ts`, `comandas.controller.ts` y edita `comandas.routes.ts`.
+* **Ismael** crea `usuarios.repository.ts`, `usuarios.service.ts`, `usuarios.controller.ts` y edita `usuarios.routes.ts`.
 
 ¡Nadie vuelve a modificar `app.ts` ni `index.ts` y **no van a tener ni un solo conflicto en Git**!
