@@ -1,6 +1,8 @@
-const express = require('express');
-const cors = require('cors');
-require('dotenv').config();
+import express, { Request, Response } from 'express';
+import cors from 'cors';
+import dotenv from 'dotenv';
+
+dotenv.config();
 
 const app = express();
 
@@ -10,8 +12,8 @@ app.use(express.json()); // Para que el backend entienda cuando le mandan un JSO
 
 const PORT = process.env.PORT || 3000;
 
-app.get('/', (req, res) => {
-  res.send('El backend está funcionando 🚀');
+app.get('/', (req: Request, res: Response) => {
+  res.send('El backend está funcionando con TypeScript 🚀');
 });
 
 app.listen(PORT, () => {

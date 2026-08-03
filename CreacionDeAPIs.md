@@ -1,7 +1,7 @@
-Podés copiar y pegar todo el texto que está adentro del siguiente recuadro directamente en un archivo llamado **`GUIA_DESARROLLO.md`** o en el **`README.md`** de su repositorio:
+Acá tenés la guía completa actualizada 100% a **TypeScript (`.ts`)**, lista para copiar y pegar en tu archivo **`GUIA_DESARROLLO.md`**:
 
 ```markdown
-# 🚀 Guía de Desarrollo Backend - RestoFlow
+# 🚀 Guía de Desarrollo Backend - RestoFlow (TypeScript Edition)
 
 Documento de organización, arquitectura de software, división de tareas y flujo de trabajo en Git para el equipo de desarrollo.
 
@@ -76,7 +76,7 @@ Documento de organización, arquitectura de software, división de tareas y fluj
 
 ---
 
-## 📁 2. Estructura de Carpetas del Proyecto
+## 📁 2. Estructura de Carpetas del Proyecto (TypeScript)
 
 ```text
 Backend/
@@ -86,27 +86,28 @@ Backend/
 │   └── schema.prisma
 ├── src/
 │   ├── config/
-│   │   └── db.js                      <-- Instancia centralizada de Prisma
+│   │   └── db.ts                      <-- Instancia centralizada de Prisma
 │   ├── controllers/                   <-- Lógica de negocio de cada integrante
-│   │   ├── categorias.controller.js   (Donato)
-│   │   ├── productos.controller.js    (Donato)
-│   │   ├── reservas.controller.js      (Gaspar)
-│   │   ├── mesas.controller.js         (Gaspar)
-│   │   ├── comandas.controller.js      (Tomas)
-│   │   ├── usuarios.controller.js      (Ismael)
-│   │   └── cocina.controller.js        (Ismael)
-│   ├── routes/                        <-- Definición de rutas Express
-│   │   ├── categorias.routes.js       (Donato)
-│   │   ├── productos.routes.js        (Donato)
-│   │   ├── reservas.routes.js         (Gaspar)
-│   │   ├── mesas.routes.js            (Gaspar)
-│   │   ├── comandas.routes.js         (Tomas)
-│   │   ├── usuarios.routes.js         (Ismael)
-│   │   └── cocina.routes.js           (Ismael)
-│   └── app.js                         <-- Configuración principal de Express
+│   │   ├── categorias.controller.ts   (Donato)
+│   │   ├── productos.controller.ts    (Donato)
+│   │   ├── reservas.controller.ts      (Gaspar)
+│   │   ├── mesas.controller.ts         (Gaspar)
+│   │   ├── comandas.controller.ts      (Tomas)
+│   │   ├── usuarios.controller.ts      (Ismael)
+│   │   └── cocina.controller.ts        (Ismael)
+│   ├── routes/                        <-- Definición de rutas Express en TS
+│   │   ├── categorias.routes.ts       (Donato)
+│   │   ├── productos.routes.ts        (Donato)
+│   │   ├── reservas.routes.ts         (Gaspar)
+│   │   ├── mesas.routes.ts            (Gaspar)
+│   │   ├── comandas.routes.ts         (Tomas)
+│   │   ├── usuarios.routes.ts         (Ismael)
+│   │   └── cocina.routes.ts           (Ismael)
+│   └── app.ts                         <-- Configuración principal de Express
 ├── .env
-├── index.js                           <-- Arranca el servidor
+├── index.ts                           <-- Arranca el servidor
 ├── package.json
+├── tsconfig.json                      <-- Configuración de TypeScript
 └── prisma.config.ts
 ```
 
@@ -114,7 +115,26 @@ Backend/
 
 ## ⚙️ 3. Instalación de Dependencias
 
-*`npm install`*.
+Ejecutar en la terminal dentro de la carpeta `Backend`:
+
+```bash
+# Dependencias base
+npm install express cors dotenv
+
+# Dependencias para TypeScript y desarrollo
+npm install -D typescript @types/express @types/cors @types/node ts-node-dev
+```
+
+*(Si hacés `git pull` de un proyecto donde ya se instalaron, solo ejecutá `npm install`)*.
+
+### Script para levantar el servidor (`package.json`)
+Agreguen este script en su `package.json`:
+```json
+"scripts": {
+  "dev": "ts-node-dev --respawn --transpile-only index.ts"
+}
+```
+Para arrancar el servidor en desarrollo: `npm run dev`
 
 ---
 
@@ -140,16 +160,26 @@ Al terminar una funcionalidad, abren un **Pull Request (PR)** en GitHub hacia la
 
 ---
 
-## 💻 5. Paso a Paso: Ejemplo Completo de Creación de una API
+## 💻 5. Paso a Paso: Ejemplo Completo de Creación de una API en TypeScript
 
 A continuación se muestra el ejemplo de cómo crear los endpoints para el módulo de **Categorías**.
 
-### Paso 2: Controlador (`src/controllers/categorias.controller.js`)
-```javascript
-import prisma from '../config/db.js';
+### Paso 1: Instancia de Prisma (`src/config/db.ts`)
+```typescript
+import { PrismaClient } from '@prisma/client';
+
+const prisma = new PrismaClient();
+
+export default prisma;
+```
+
+### Paso 2: Controlador (`src/controllers/categorias.controller.ts`)
+```typescript
+import { Request, Response } from 'express';
+import prisma from '../config/db';
 
 // GET /api/categorias - Listar categorías
-export const getCategorias = async (req, res) => {
+export const getCategorias = async (req: Request, res: Response): Promise<void> => {
   try {
     const categorias = await prisma.categoria.findMany({
       include: { productos: true }
@@ -161,12 +191,13 @@ export const getCategorias = async (req, res) => {
 };
 
 // POST /api/categorias - Crear categoría
-export const createCategoria = async (req, res) => {
+export const createCategoria = async (req: Request, res: Response): Promise<void> => {
   try {
     const { nombre } = req.body;
 
     if (!nombre) {
-      return res.status(400).json({ error: 'El nombre es obligatorio' });
+      res.status(400).json({ error: 'El nombre es obligatorio' });
+      return;
     }
 
     const nuevaCategoria = await prisma.categoria.create({
@@ -180,10 +211,10 @@ export const createCategoria = async (req, res) => {
 };
 ```
 
-### Paso 3: Rutas (`src/routes/categorias.routes.js`)
-```javascript
+### Paso 3: Rutas (`src/routes/categorias.routes.ts`)
+```typescript
 import { Router } from 'express';
-import { getCategorias, createCategoria } from '../controllers/categorias.controller.js';
+import { getCategorias, createCategoria } from '../controllers/categorias.controller';
 
 const router = Router();
 
@@ -191,11 +222,49 @@ router.get('/', getCategorias);
 router.post('/', createCategoria);
 
 export default router;
+```
 
+### Paso 4: Express App (`src/app.ts`)
+*(Registrado desde el día 1)*
+```typescript
+import express, { Application } from 'express';
+import cors from 'cors';
+
+import categoriasRoutes from './routes/categorias.routes';
+import mesasRoutes from './routes/mesas.routes';
+import comandasRoutes from './routes/comandas.routes';
+import usuariosRoutes from './routes/usuarios.routes';
+
+const app: Application = express();
+
+app.use(cors());
+app.use(express.json());
+
+// Endpoints registrados
+app.use('/api/categorias', categoriasRoutes);
+app.use('/api/mesas', mesasRoutes);
+app.use('/api/comandas', comandasRoutes);
+app.use('/api/usuarios', usuariosRoutes);
+
+export default app;
+```
+
+### Paso 5: Punto de Entrada (`index.ts`)
+```typescript
+import app from './src/app';
+
+const PORT = process.env.PORT || 3000;
+
+app.listen(PORT, () => {
+  console.log(`Servidor TS corriendo en http://localhost:${PORT}`);
+});
+```
+
+---
 
 ## 🔒 6. Reglas de Oro
-1. **Nadie edita `src/app.js` ni `index.js` después de la configuración inicial del Día 1.**
-2. **Cada integrante trabaja ÚNICAMENTE dentro de sus propios archivos** en `src/controllers/` y `src/routes/`.
+1. **Nadie edita `src/app.ts` ni `index.ts` después de la configuración inicial del Día 1.**
+2. **Cada integrante trabaja ÚNICAMENTE dentro de sus propios archivos `.ts`** en `src/controllers/` y `src/routes/`.
 3. **NUNCA subir cambios directamente a `main`**, siempre usen sus ramas individuales.
-4. Proben sus endpoints en **Postman / Insomnia** a medida que vayan programando.
+4. Prueben sus endpoints en **Postman / Insomnia** a medida que vayan programando.
 ```
