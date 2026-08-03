@@ -21,11 +21,11 @@ datasource db {
 //  }
 
 // Migrar cambios a la db por primera vez 
-// npx prisma migrate dev --name init
+// npx prisma migrate dev --restoFlow init
 // Luego
-// npx prisma migrate dev --name <nombre_de_tu_cambio> 
+// npx prisma migrate dev --restoFlow <nombre_de_tu_cambio> 
 
-
+  
 model usuario {
   id Int @id @default(autoincrement())
   nombre String
