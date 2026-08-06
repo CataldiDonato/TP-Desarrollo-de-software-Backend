@@ -232,16 +232,16 @@ export type usuarioOrderByWithRelationInput = {
 
 export type usuarioWhereUniqueInput = Prisma.AtLeast<{
   id?: number
+  email?: string
   AND?: Prisma.usuarioWhereInput | Prisma.usuarioWhereInput[]
   OR?: Prisma.usuarioWhereInput[]
   NOT?: Prisma.usuarioWhereInput | Prisma.usuarioWhereInput[]
   nombre?: Prisma.StringFilter<"usuario"> | string
-  email?: Prisma.StringFilter<"usuario"> | string
   contrasenia?: Prisma.StringFilter<"usuario"> | string
   rol?: Prisma.Enumrol_usuarioFilter<"usuario"> | $Enums.rol_usuario
   comandas?: Prisma.ComandaListRelationFilter
   detalles_comanda?: Prisma.Detalle_comandaListRelationFilter
-}, "id">
+}, "id" | "email">
 
 export type usuarioOrderByWithAggregationInput = {
   id?: Prisma.SortOrder

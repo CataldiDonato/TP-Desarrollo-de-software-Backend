@@ -20,6 +20,7 @@
   },
   "homepage": "https://github.com/CataldiDonato/TP-Desarrollo-de-software-Backend#readme",
   "dependencies": {
+    "@prisma/adapter-pg": "^7.9.1",
     "@prisma/client": "^7.9.1",
     "cors": "^2.8.6",
     "dotenv": "^17.4.2",

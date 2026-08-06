@@ -8,8 +8,9 @@ import cors from 'cors';
 // import mesasRoutes from './routes/mesas.routes';
 // import reservasRoutes from './routes/reservas.routes';
 // import comandasRoutes from './routes/comandas.routes';
-// import usuariosRoutes from './routes/usuarios.routes';
-// import cocinaRoutes from './routes/cocina.routes';
+import usuariosRoutes from './routes/usuarios.routes';
+import cocinaRoutes from './routes/cocina.routes';
+import dashboardRoutes from './routes/dashboard.routes';
 
 const app: Application = express();
 
@@ -34,8 +35,9 @@ app.get('/', (req: Request, res: Response) => {
 // app.use('/api/mesas', mesasRoutes);
 // app.use('/api/reservas', reservasRoutes);
 // app.use('/api/comandas', comandasRoutes);
-// app.use('/api/usuarios', usuariosRoutes);
-// app.use('/api/cocina', cocinaRoutes);
+app.use('/api/usuarios', usuariosRoutes);
+app.use('/api/cocina', cocinaRoutes);
+app.use('/api/dashboard', dashboardRoutes);
 
 // 5. Captura de rutas no existentes (Reemplaza el texto "Cannot GET")
 app.use((req: Request, res: Response) => {
