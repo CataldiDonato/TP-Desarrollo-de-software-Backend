@@ -4,7 +4,12 @@
     "module": "CommonJS",
     "esModuleInterop": true,
     "skipLibCheck": true,
-    "strict": false
+    "strict": false,
+    "types": ["node"]
   },
-  "include": ["src/**/*", "index.ts"]
+  "include": [
+    "src/**/*", 
+    "index.ts", 
+    "prisma.config.ts"
+  ]
 }

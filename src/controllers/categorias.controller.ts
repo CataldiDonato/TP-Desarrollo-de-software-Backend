@@ -17,7 +17,14 @@ export class CategoriaController {
     async createCategoria(req: Request, res: Response) {
         try {
             const {nombre} = req.body;
-            const nuevaCategoria = await service.create(String(nombre))
+
+            if (!nombre || typeof nombre !== 'string' || nombre.trim().length === 0) {
+                return res.status(400).json({ message: "El nombre es obligatorio y debe ser un texto válido." });
+            }
+
+            const nombreFinal = nombre.trim();
+
+            const nuevaCategoria = await service.create(nombreFinal)
             res.status(201).json(nuevaCategoria);
         } catch (error:any) {
             res.status(400).json({message: error.message});
@@ -27,7 +34,14 @@ export class CategoriaController {
     async deleteCategoria(req: Request, res: Response) {
         try {
             const {id} = req.params;
-            await service.delete(Number(id));
+            const idNumber = Number(id)
+
+            if (isNaN(idNumber)){
+                return res.status(400).json({ message: "El ID de la categoria debe ser un número válido." });
+            }
+
+            await service.delete(idNumber);
+
             res.status(200).json({ message: 'Categoría eliminada correctamente' });
         } catch (error:any) {
             res.status(400).json({message: error.message});
@@ -38,7 +52,18 @@ export class CategoriaController {
         try {
             const { id } = req.params; 
             const { nombre } = req.body; 
-            const CategoriaActualizada = await service.update(Number(id), String(nombre));
+            const idNumber = Number(id)
+            const nombreString = String(nombre);
+
+            if (!nombreString || typeof nombreString !== 'string' || nombreString.trim().length === 0) {
+                return res.status(400).json({ message: "El nombre es obligatorio y debe ser un texto válido." });
+            }
+            if (isNaN(idNumber)){
+                return res.status(400).json({ message: "El ID de la categoria debe ser un número válido." });
+            }
+            const nombrefinal = nombre.trim();
+
+            const CategoriaActualizada = await service.update(idNumber, nombrefinal);
             res.status(200).json(CategoriaActualizada); 
         } catch (error: any) {
             res.status(400).json({ message: error.message });

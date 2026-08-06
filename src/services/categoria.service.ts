@@ -9,24 +9,38 @@ export class CategoriaService {
     }
 
     async create(nombre: string) {
-        
-        if (!nombre || nombre.trim() === '') {
-            throw new Error('El nombre obligatorio');
+        const existe = await repository.findByNombre(nombre)
+        if(existe){
+            throw new Error(`Ya existe una categoría con el nombre "${nombre}".`);
         }
         return await repository.create(nombre);
     }
 
     async delete(id: number) {
-        if (!id || isNaN(id)) {
-            throw new Error('El ID de la categoría debe ser un número válido');
+        const existe = await repository.findById(id)
+        if(!existe){
+            throw new Error(`No existe una categoría con ese id "${id}".`);
+        }
+        if (existe.productos && existe.productos.length > 0) {
+            throw new Error("No se puede eliminar la categoría porque tiene productos asociados.");
         }
         return await repository.delete(id);
     }
 
     async update(id: number, nombre: string) {
-        if (!nombre || nombre.trim() === '' || !id || isNaN(id)) {
-            throw new Error('El id y el nombre son obligatorios');
+
+        const existe = await repository.findById(id)
+
+        if(!existe){
+            throw new Error(`No existe una categoría con ese id "${id}".`);
         }
+
+        const existeNombre = await repository.findByNombre(nombre)
+
+        if(existeNombre){
+            throw new Error(`Ya existe una categoría con ese nombre "${nombre}".`);
+        }
+        
         return await repository.update(id, nombre);
     }
 }
