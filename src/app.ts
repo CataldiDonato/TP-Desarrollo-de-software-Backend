@@ -33,9 +33,10 @@ app.get('/', (req: Request, res: Response) => {
 // app.use('/api/productos', productosRoutes);
 // app.use('/api/mesas', mesasRoutes);
 // app.use('/api/reservas', reservasRoutes);
-// app.use('/api/comandas', comandasRoutes);
+app.use('/api/comandas', comandasRoutes);
 // app.use('/api/usuarios', usuariosRoutes);
 // app.use('/api/cocina', cocinaRoutes);
+import comandasRoutes from './routes/comanda.routes';
 
 // 5. Captura de rutas no existentes (Reemplaza el texto "Cannot GET")
 app.use((req: Request, res: Response) => {
