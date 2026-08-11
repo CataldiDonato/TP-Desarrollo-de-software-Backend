@@ -16,4 +16,24 @@ export class CategoriaRepository {
     async update(id: number, nombre: string){
         return await prisma.categoria.update({where: {id}, data: {nombre}})
     }
+
+    async findByNombre(nombre: string){
+        return await prisma.categoria.findFirst(
+            {where: {
+                nombre:{
+                    equals: nombre,
+                    mode: 'insensitive'
+                }
+            }
+        });   
+    }
+
+    async findById(id: number) {
+    return await prisma.categoria.findUnique({
+        where: { id },
+        include: {
+            productos: true 
+        }
+    });
+}
 }

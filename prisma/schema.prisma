@@ -5,11 +5,11 @@
   
 generator client {
   provider = "prisma-client"
+  output   = "../src/generated"
 }
 
 datasource db {
   provider = "postgresql"
-  url      = env("DATABASE_URL")
 }
 
 //  model Plato {
@@ -29,7 +29,7 @@ datasource db {
 model usuario {
   id Int @id @default(autoincrement())
   nombre String
-  email String
+  email String @unique
   contrasenia String
   rol rol_usuario
 
