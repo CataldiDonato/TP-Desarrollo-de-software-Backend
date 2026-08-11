@@ -3,11 +3,13 @@ import cors from 'cors';
 
 // 1. Importaciones de rutas de cada integrante
 // (Descomenta cada una a medida que las vayan creando)
-// import categoriasRoutes from './routes/categorias.routes';
-// import productosRoutes from './routes/productos.routes';
+import categoriasRoutes from './routes/categorias.routes';
+import productosRoutes from './routes/productos.routes';
+import precioProducto from './routes/precio_producto.routes';
+import detalleComanda from './routes/detalle_comanda.routes';
 // import mesasRoutes from './routes/mesas.routes';
 // import reservasRoutes from './routes/reservas.routes';
-// import comandasRoutes from './routes/comandas.routes';
+import comandasRoutes from './routes/comanda.routes';
 import usuariosRoutes from './routes/usuarios.routes';
 import cocinaRoutes from './routes/cocina.routes';
 import dashboardRoutes from './routes/dashboard.routes';
@@ -30,11 +32,14 @@ app.get('/', (req: Request, res: Response) => {
 
 // 4. Registro de endpoints de la API
 // (Descomenta la línea cuando la ruta correspondiente esté lista)
-// app.use('/api/categorias', categoriasRoutes);
-// app.use('/api/productos', productosRoutes);
+app.use('/api/categorias', categoriasRoutes);
+app.use('/api/productos', productosRoutes);
+app.use('/api/precio-producto', precioProducto);
+app.use('/api/detalle-comanda', detalleComanda);
+
 // app.use('/api/mesas', mesasRoutes);
 // app.use('/api/reservas', reservasRoutes);
-// app.use('/api/comandas', comandasRoutes);
+app.use('/api/comandas', comandasRoutes);
 app.use('/api/usuarios', usuariosRoutes);
 app.use('/api/cocina', cocinaRoutes);
 app.use('/api/dashboard', dashboardRoutes);
