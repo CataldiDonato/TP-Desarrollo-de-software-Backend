@@ -1,5 +1,6 @@
 import prisma from '../config/db';
-import { UpdateProducto } from '../services/producto.service';
+import { UpdateProducto } from '../types/productos.types';
+
 
 
 export class ProductoRepository {
@@ -38,10 +39,10 @@ export class ProductoRepository {
 
     async findById(id: number) {
     return await prisma.producto.findUnique({
-        where: { id },
-        include: {
-            productos: true 
-        }
+        where: { id }
+        //include: {
+        //    productos: true 
+        //  }
     });
     }
 

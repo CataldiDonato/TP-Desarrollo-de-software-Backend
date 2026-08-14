@@ -1,7 +1,7 @@
 import { Request, Response } from 'express';
 import { ProductoService } from '../services/producto.service';
 import { tipo_producto } from '../generated/enums';
-import { UpdateProducto } from '../services/producto.service';
+import { UpdateProducto } from '../types/productos.types'
 
 const service = new ProductoService();
 

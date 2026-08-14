@@ -1,18 +1,12 @@
 import { ProductoRepository } from "../repositories/productos.repository";
 import { CategoriaRepository } from "../repositories/categoria.repository";
-import { tipo_producto } from "../generated/enums";
 import { Precio_productoRepository } from "../repositories/precio_producto.repository";
+import { UpdateProducto } from "../types/productos.types";
 
-export interface UpdateProducto {
-    nombre?: string;
-    descripcion?: string;
-    tipo?: tipo_producto;
-    id_categoria?: number;
-    precio?: number;
-}
 const repositoryPrecio_producto = new Precio_productoRepository();
 const repository = new ProductoRepository();
 const repositoryCategoria = new CategoriaRepository();
+
 export class ProductoService {
 
     async getAll() {

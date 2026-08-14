@@ -13,6 +13,7 @@ export class comandaController {
             res.status(500).json({ message: "Error al obtener las comandas", error: error.message });
         }
     }
+    
 
     async create(req: Request, res: Response) {
         try {
