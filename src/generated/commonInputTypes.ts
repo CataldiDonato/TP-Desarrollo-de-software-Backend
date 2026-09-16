@@ -188,6 +188,23 @@ export type StringNullableWithAggregatesFilter<$PrismaModel = never> = {
   _max?: Prisma.NestedStringNullableFilter<$PrismaModel>
 }
 
+export type Enumestado_mesaFilter<$PrismaModel = never> = {
+  equals?: $Enums.estado_mesa | Prisma.Enumestado_mesaFieldRefInput<$PrismaModel>
+  in?: $Enums.estado_mesa[] | Prisma.ListEnumestado_mesaFieldRefInput<$PrismaModel>
+  notIn?: $Enums.estado_mesa[] | Prisma.ListEnumestado_mesaFieldRefInput<$PrismaModel>
+  not?: Prisma.NestedEnumestado_mesaFilter<$PrismaModel> | $Enums.estado_mesa
+}
+
+export type Enumestado_mesaWithAggregatesFilter<$PrismaModel = never> = {
+  equals?: $Enums.estado_mesa | Prisma.Enumestado_mesaFieldRefInput<$PrismaModel>
+  in?: $Enums.estado_mesa[] | Prisma.ListEnumestado_mesaFieldRefInput<$PrismaModel>
+  notIn?: $Enums.estado_mesa[] | Prisma.ListEnumestado_mesaFieldRefInput<$PrismaModel>
+  not?: Prisma.NestedEnumestado_mesaWithAggregatesFilter<$PrismaModel> | $Enums.estado_mesa
+  _count?: Prisma.NestedIntFilter<$PrismaModel>
+  _min?: Prisma.NestedEnumestado_mesaFilter<$PrismaModel>
+  _max?: Prisma.NestedEnumestado_mesaFilter<$PrismaModel>
+}
+
 export type Enumestado_comandaFilter<$PrismaModel = never> = {
   equals?: $Enums.estado_comanda | Prisma.Enumestado_comandaFieldRefInput<$PrismaModel>
   in?: $Enums.estado_comanda[] | Prisma.ListEnumestado_comandaFieldRefInput<$PrismaModel>
@@ -478,6 +495,23 @@ export type NestedIntNullableFilter<$PrismaModel = never> = {
   gt?: number | Prisma.IntFieldRefInput<$PrismaModel>
   gte?: number | Prisma.IntFieldRefInput<$PrismaModel>
   not?: Prisma.NestedIntNullableFilter<$PrismaModel> | number | null
+}
+
+export type NestedEnumestado_mesaFilter<$PrismaModel = never> = {
+  equals?: $Enums.estado_mesa | Prisma.Enumestado_mesaFieldRefInput<$PrismaModel>
+  in?: $Enums.estado_mesa[] | Prisma.ListEnumestado_mesaFieldRefInput<$PrismaModel>
+  notIn?: $Enums.estado_mesa[] | Prisma.ListEnumestado_mesaFieldRefInput<$PrismaModel>
+  not?: Prisma.NestedEnumestado_mesaFilter<$PrismaModel> | $Enums.estado_mesa
+}
+
+export type NestedEnumestado_mesaWithAggregatesFilter<$PrismaModel = never> = {
+  equals?: $Enums.estado_mesa | Prisma.Enumestado_mesaFieldRefInput<$PrismaModel>
+  in?: $Enums.estado_mesa[] | Prisma.ListEnumestado_mesaFieldRefInput<$PrismaModel>
+  notIn?: $Enums.estado_mesa[] | Prisma.ListEnumestado_mesaFieldRefInput<$PrismaModel>
+  not?: Prisma.NestedEnumestado_mesaWithAggregatesFilter<$PrismaModel> | $Enums.estado_mesa
+  _count?: Prisma.NestedIntFilter<$PrismaModel>
+  _min?: Prisma.NestedEnumestado_mesaFilter<$PrismaModel>
+  _max?: Prisma.NestedEnumestado_mesaFilter<$PrismaModel>
 }
 
 export type NestedEnumestado_comandaFilter<$PrismaModel = never> = {

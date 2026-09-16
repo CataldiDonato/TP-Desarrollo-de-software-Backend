@@ -103,7 +103,9 @@ export const ReservaScalarFieldEnum = {
   nombre_cliente: 'nombre_cliente',
   telefono_cliente: 'telefono_cliente',
   estado: 'estado',
-  motivo_cancelacion: 'motivo_cancelacion'
+  motivo_cancelacion: 'motivo_cancelacion',
+  cantidad_personas: 'cantidad_personas',
+  id_mesa: 'id_mesa'
 } as const
 
 export type ReservaScalarFieldEnum = (typeof ReservaScalarFieldEnum)[keyof typeof ReservaScalarFieldEnum]
@@ -111,7 +113,8 @@ export type ReservaScalarFieldEnum = (typeof ReservaScalarFieldEnum)[keyof typeo
 
 export const MesaScalarFieldEnum = {
   id: 'id',
-  capacidad: 'capacidad'
+  capacidad: 'capacidad',
+  estado: 'estado'
 } as const
 
 export type MesaScalarFieldEnum = (typeof MesaScalarFieldEnum)[keyof typeof MesaScalarFieldEnum]
