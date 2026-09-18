@@ -9,6 +9,7 @@ export class DashboardController {
         try {
             return res.status(200).json(await service.getStats());
         } catch (error) {
+            console.error('ERROR EN DASHBOARD:', error);
             const { statusCode, message } = getErrorResponse(error);
             return res.status(statusCode).json({ message });
         }

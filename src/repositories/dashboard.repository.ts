@@ -54,7 +54,7 @@ export class DashboardRepository {
                     fecha: true,
                     nombre_cliente: true,
                     telefono_cliente: true,
-                    mesas: {
+                    mesa: {
                         select: { id: true, capacidad: true }
                     }
                 }
