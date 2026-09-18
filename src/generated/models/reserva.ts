@@ -28,10 +28,14 @@ export type AggregateReserva = {
 
 export type ReservaAvgAggregateOutputType = {
   id: number | null
+  cantidad_personas: number | null
+  id_mesa: number | null
 }
 
 export type ReservaSumAggregateOutputType = {
   id: number | null
+  cantidad_personas: number | null
+  id_mesa: number | null
 }
 
 export type ReservaMinAggregateOutputType = {
@@ -41,6 +45,8 @@ export type ReservaMinAggregateOutputType = {
   telefono_cliente: string | null
   estado: $Enums.estado_reserva | null
   motivo_cancelacion: string | null
+  cantidad_personas: number | null
+  id_mesa: number | null
 }
 
 export type ReservaMaxAggregateOutputType = {
@@ -50,6 +56,8 @@ export type ReservaMaxAggregateOutputType = {
   telefono_cliente: string | null
   estado: $Enums.estado_reserva | null
   motivo_cancelacion: string | null
+  cantidad_personas: number | null
+  id_mesa: number | null
 }
 
 export type ReservaCountAggregateOutputType = {
@@ -59,16 +67,22 @@ export type ReservaCountAggregateOutputType = {
   telefono_cliente: number
   estado: number
   motivo_cancelacion: number
+  cantidad_personas: number
+  id_mesa: number
   _all: number
 }
 
 
 export type ReservaAvgAggregateInputType = {
   id?: true
+  cantidad_personas?: true
+  id_mesa?: true
 }
 
 export type ReservaSumAggregateInputType = {
   id?: true
+  cantidad_personas?: true
+  id_mesa?: true
 }
 
 export type ReservaMinAggregateInputType = {
@@ -78,6 +92,8 @@ export type ReservaMinAggregateInputType = {
   telefono_cliente?: true
   estado?: true
   motivo_cancelacion?: true
+  cantidad_personas?: true
+  id_mesa?: true
 }
 
 export type ReservaMaxAggregateInputType = {
@@ -87,6 +103,8 @@ export type ReservaMaxAggregateInputType = {
   telefono_cliente?: true
   estado?: true
   motivo_cancelacion?: true
+  cantidad_personas?: true
+  id_mesa?: true
 }
 
 export type ReservaCountAggregateInputType = {
@@ -96,6 +114,8 @@ export type ReservaCountAggregateInputType = {
   telefono_cliente?: true
   estado?: true
   motivo_cancelacion?: true
+  cantidad_personas?: true
+  id_mesa?: true
   _all?: true
 }
 
@@ -192,6 +212,8 @@ export type ReservaGroupByOutputType = {
   telefono_cliente: string
   estado: $Enums.estado_reserva
   motivo_cancelacion: string | null
+  cantidad_personas: number
+  id_mesa: number
   _count: ReservaCountAggregateOutputType | null
   _avg: ReservaAvgAggregateOutputType | null
   _sum: ReservaSumAggregateOutputType | null
@@ -224,7 +246,9 @@ export type reservaWhereInput = {
   telefono_cliente?: Prisma.StringFilter<"reserva"> | string
   estado?: Prisma.Enumestado_reservaFilter<"reserva"> | $Enums.estado_reserva
   motivo_cancelacion?: Prisma.StringNullableFilter<"reserva"> | string | null
-  mesas?: Prisma.MesaListRelationFilter
+  cantidad_personas?: Prisma.IntFilter<"reserva"> | number
+  id_mesa?: Prisma.IntFilter<"reserva"> | number
+  mesa?: Prisma.XOR<Prisma.MesaScalarRelationFilter, Prisma.mesaWhereInput>
 }
 
 export type reservaOrderByWithRelationInput = {
@@ -234,7 +258,9 @@ export type reservaOrderByWithRelationInput = {
   telefono_cliente?: Prisma.SortOrder
   estado?: Prisma.SortOrder
   motivo_cancelacion?: Prisma.SortOrderInput | Prisma.SortOrder
-  mesas?: Prisma.mesaOrderByRelationAggregateInput
+  cantidad_personas?: Prisma.SortOrder
+  id_mesa?: Prisma.SortOrder
+  mesa?: Prisma.mesaOrderByWithRelationInput
 }
 
 export type reservaWhereUniqueInput = Prisma.AtLeast<{
@@ -247,7 +273,9 @@ export type reservaWhereUniqueInput = Prisma.AtLeast<{
   telefono_cliente?: Prisma.StringFilter<"reserva"> | string
   estado?: Prisma.Enumestado_reservaFilter<"reserva"> | $Enums.estado_reserva
   motivo_cancelacion?: Prisma.StringNullableFilter<"reserva"> | string | null
-  mesas?: Prisma.MesaListRelationFilter
+  cantidad_personas?: Prisma.IntFilter<"reserva"> | number
+  id_mesa?: Prisma.IntFilter<"reserva"> | number
+  mesa?: Prisma.XOR<Prisma.MesaScalarRelationFilter, Prisma.mesaWhereInput>
 }, "id">
 
 export type reservaOrderByWithAggregationInput = {
@@ -257,6 +285,8 @@ export type reservaOrderByWithAggregationInput = {
   telefono_cliente?: Prisma.SortOrder
   estado?: Prisma.SortOrder
   motivo_cancelacion?: Prisma.SortOrderInput | Prisma.SortOrder
+  cantidad_personas?: Prisma.SortOrder
+  id_mesa?: Prisma.SortOrder
   _count?: Prisma.reservaCountOrderByAggregateInput
   _avg?: Prisma.reservaAvgOrderByAggregateInput
   _max?: Prisma.reservaMaxOrderByAggregateInput
@@ -274,15 +304,18 @@ export type reservaScalarWhereWithAggregatesInput = {
   telefono_cliente?: Prisma.StringWithAggregatesFilter<"reserva"> | string
   estado?: Prisma.Enumestado_reservaWithAggregatesFilter<"reserva"> | $Enums.estado_reserva
   motivo_cancelacion?: Prisma.StringNullableWithAggregatesFilter<"reserva"> | string | null
+  cantidad_personas?: Prisma.IntWithAggregatesFilter<"reserva"> | number
+  id_mesa?: Prisma.IntWithAggregatesFilter<"reserva"> | number
 }
 
 export type reservaCreateInput = {
   fecha: Date | string
   nombre_cliente: string
   telefono_cliente: string
-  estado: $Enums.estado_reserva
+  estado?: $Enums.estado_reserva
   motivo_cancelacion?: string | null
-  mesas?: Prisma.mesaCreateNestedManyWithoutReservasInput
+  cantidad_personas: number
+  mesa: Prisma.mesaCreateNestedOneWithoutReservasInput
 }
 
 export type reservaUncheckedCreateInput = {
@@ -290,9 +323,10 @@ export type reservaUncheckedCreateInput = {
   fecha: Date | string
   nombre_cliente: string
   telefono_cliente: string
-  estado: $Enums.estado_reserva
+  estado?: $Enums.estado_reserva
   motivo_cancelacion?: string | null
-  mesas?: Prisma.mesaUncheckedCreateNestedManyWithoutReservasInput
+  cantidad_personas: number
+  id_mesa: number
 }
 
 export type reservaUpdateInput = {
@@ -301,7 +335,8 @@ export type reservaUpdateInput = {
   telefono_cliente?: Prisma.StringFieldUpdateOperationsInput | string
   estado?: Prisma.Enumestado_reservaFieldUpdateOperationsInput | $Enums.estado_reserva
   motivo_cancelacion?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  mesas?: Prisma.mesaUpdateManyWithoutReservasNestedInput
+  cantidad_personas?: Prisma.IntFieldUpdateOperationsInput | number
+  mesa?: Prisma.mesaUpdateOneRequiredWithoutReservasNestedInput
 }
 
 export type reservaUncheckedUpdateInput = {
@@ -311,7 +346,8 @@ export type reservaUncheckedUpdateInput = {
   telefono_cliente?: Prisma.StringFieldUpdateOperationsInput | string
   estado?: Prisma.Enumestado_reservaFieldUpdateOperationsInput | $Enums.estado_reserva
   motivo_cancelacion?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  mesas?: Prisma.mesaUncheckedUpdateManyWithoutReservasNestedInput
+  cantidad_personas?: Prisma.IntFieldUpdateOperationsInput | number
+  id_mesa?: Prisma.IntFieldUpdateOperationsInput | number
 }
 
 export type reservaCreateManyInput = {
@@ -319,8 +355,10 @@ export type reservaCreateManyInput = {
   fecha: Date | string
   nombre_cliente: string
   telefono_cliente: string
-  estado: $Enums.estado_reserva
+  estado?: $Enums.estado_reserva
   motivo_cancelacion?: string | null
+  cantidad_personas: number
+  id_mesa: number
 }
 
 export type reservaUpdateManyMutationInput = {
@@ -329,6 +367,7 @@ export type reservaUpdateManyMutationInput = {
   telefono_cliente?: Prisma.StringFieldUpdateOperationsInput | string
   estado?: Prisma.Enumestado_reservaFieldUpdateOperationsInput | $Enums.estado_reserva
   motivo_cancelacion?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  cantidad_personas?: Prisma.IntFieldUpdateOperationsInput | number
 }
 
 export type reservaUncheckedUpdateManyInput = {
@@ -338,6 +377,8 @@ export type reservaUncheckedUpdateManyInput = {
   telefono_cliente?: Prisma.StringFieldUpdateOperationsInput | string
   estado?: Prisma.Enumestado_reservaFieldUpdateOperationsInput | $Enums.estado_reserva
   motivo_cancelacion?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  cantidad_personas?: Prisma.IntFieldUpdateOperationsInput | number
+  id_mesa?: Prisma.IntFieldUpdateOperationsInput | number
 }
 
 export type reservaCountOrderByAggregateInput = {
@@ -347,10 +388,14 @@ export type reservaCountOrderByAggregateInput = {
   telefono_cliente?: Prisma.SortOrder
   estado?: Prisma.SortOrder
   motivo_cancelacion?: Prisma.SortOrder
+  cantidad_personas?: Prisma.SortOrder
+  id_mesa?: Prisma.SortOrder
 }
 
 export type reservaAvgOrderByAggregateInput = {
   id?: Prisma.SortOrder
+  cantidad_personas?: Prisma.SortOrder
+  id_mesa?: Prisma.SortOrder
 }
 
 export type reservaMaxOrderByAggregateInput = {
@@ -360,6 +405,8 @@ export type reservaMaxOrderByAggregateInput = {
   telefono_cliente?: Prisma.SortOrder
   estado?: Prisma.SortOrder
   motivo_cancelacion?: Prisma.SortOrder
+  cantidad_personas?: Prisma.SortOrder
+  id_mesa?: Prisma.SortOrder
 }
 
 export type reservaMinOrderByAggregateInput = {
@@ -369,10 +416,14 @@ export type reservaMinOrderByAggregateInput = {
   telefono_cliente?: Prisma.SortOrder
   estado?: Prisma.SortOrder
   motivo_cancelacion?: Prisma.SortOrder
+  cantidad_personas?: Prisma.SortOrder
+  id_mesa?: Prisma.SortOrder
 }
 
 export type reservaSumOrderByAggregateInput = {
   id?: Prisma.SortOrder
+  cantidad_personas?: Prisma.SortOrder
+  id_mesa?: Prisma.SortOrder
 }
 
 export type ReservaListRelationFilter = {
@@ -397,80 +448,91 @@ export type NullableStringFieldUpdateOperationsInput = {
   set?: string | null
 }
 
-export type reservaCreateNestedManyWithoutMesasInput = {
-  create?: Prisma.XOR<Prisma.reservaCreateWithoutMesasInput, Prisma.reservaUncheckedCreateWithoutMesasInput> | Prisma.reservaCreateWithoutMesasInput[] | Prisma.reservaUncheckedCreateWithoutMesasInput[]
-  connectOrCreate?: Prisma.reservaCreateOrConnectWithoutMesasInput | Prisma.reservaCreateOrConnectWithoutMesasInput[]
+export type reservaCreateNestedManyWithoutMesaInput = {
+  create?: Prisma.XOR<Prisma.reservaCreateWithoutMesaInput, Prisma.reservaUncheckedCreateWithoutMesaInput> | Prisma.reservaCreateWithoutMesaInput[] | Prisma.reservaUncheckedCreateWithoutMesaInput[]
+  connectOrCreate?: Prisma.reservaCreateOrConnectWithoutMesaInput | Prisma.reservaCreateOrConnectWithoutMesaInput[]
+  createMany?: Prisma.reservaCreateManyMesaInputEnvelope
   connect?: Prisma.reservaWhereUniqueInput | Prisma.reservaWhereUniqueInput[]
 }
 
-export type reservaUncheckedCreateNestedManyWithoutMesasInput = {
-  create?: Prisma.XOR<Prisma.reservaCreateWithoutMesasInput, Prisma.reservaUncheckedCreateWithoutMesasInput> | Prisma.reservaCreateWithoutMesasInput[] | Prisma.reservaUncheckedCreateWithoutMesasInput[]
-  connectOrCreate?: Prisma.reservaCreateOrConnectWithoutMesasInput | Prisma.reservaCreateOrConnectWithoutMesasInput[]
+export type reservaUncheckedCreateNestedManyWithoutMesaInput = {
+  create?: Prisma.XOR<Prisma.reservaCreateWithoutMesaInput, Prisma.reservaUncheckedCreateWithoutMesaInput> | Prisma.reservaCreateWithoutMesaInput[] | Prisma.reservaUncheckedCreateWithoutMesaInput[]
+  connectOrCreate?: Prisma.reservaCreateOrConnectWithoutMesaInput | Prisma.reservaCreateOrConnectWithoutMesaInput[]
+  createMany?: Prisma.reservaCreateManyMesaInputEnvelope
   connect?: Prisma.reservaWhereUniqueInput | Prisma.reservaWhereUniqueInput[]
 }
 
-export type reservaUpdateManyWithoutMesasNestedInput = {
-  create?: Prisma.XOR<Prisma.reservaCreateWithoutMesasInput, Prisma.reservaUncheckedCreateWithoutMesasInput> | Prisma.reservaCreateWithoutMesasInput[] | Prisma.reservaUncheckedCreateWithoutMesasInput[]
-  connectOrCreate?: Prisma.reservaCreateOrConnectWithoutMesasInput | Prisma.reservaCreateOrConnectWithoutMesasInput[]
-  upsert?: Prisma.reservaUpsertWithWhereUniqueWithoutMesasInput | Prisma.reservaUpsertWithWhereUniqueWithoutMesasInput[]
+export type reservaUpdateManyWithoutMesaNestedInput = {
+  create?: Prisma.XOR<Prisma.reservaCreateWithoutMesaInput, Prisma.reservaUncheckedCreateWithoutMesaInput> | Prisma.reservaCreateWithoutMesaInput[] | Prisma.reservaUncheckedCreateWithoutMesaInput[]
+  connectOrCreate?: Prisma.reservaCreateOrConnectWithoutMesaInput | Prisma.reservaCreateOrConnectWithoutMesaInput[]
+  upsert?: Prisma.reservaUpsertWithWhereUniqueWithoutMesaInput | Prisma.reservaUpsertWithWhereUniqueWithoutMesaInput[]
+  createMany?: Prisma.reservaCreateManyMesaInputEnvelope
   set?: Prisma.reservaWhereUniqueInput | Prisma.reservaWhereUniqueInput[]
   disconnect?: Prisma.reservaWhereUniqueInput | Prisma.reservaWhereUniqueInput[]
   delete?: Prisma.reservaWhereUniqueInput | Prisma.reservaWhereUniqueInput[]
   connect?: Prisma.reservaWhereUniqueInput | Prisma.reservaWhereUniqueInput[]
-  update?: Prisma.reservaUpdateWithWhereUniqueWithoutMesasInput | Prisma.reservaUpdateWithWhereUniqueWithoutMesasInput[]
-  updateMany?: Prisma.reservaUpdateManyWithWhereWithoutMesasInput | Prisma.reservaUpdateManyWithWhereWithoutMesasInput[]
+  update?: Prisma.reservaUpdateWithWhereUniqueWithoutMesaInput | Prisma.reservaUpdateWithWhereUniqueWithoutMesaInput[]
+  updateMany?: Prisma.reservaUpdateManyWithWhereWithoutMesaInput | Prisma.reservaUpdateManyWithWhereWithoutMesaInput[]
   deleteMany?: Prisma.reservaScalarWhereInput | Prisma.reservaScalarWhereInput[]
 }
 
-export type reservaUncheckedUpdateManyWithoutMesasNestedInput = {
-  create?: Prisma.XOR<Prisma.reservaCreateWithoutMesasInput, Prisma.reservaUncheckedCreateWithoutMesasInput> | Prisma.reservaCreateWithoutMesasInput[] | Prisma.reservaUncheckedCreateWithoutMesasInput[]
-  connectOrCreate?: Prisma.reservaCreateOrConnectWithoutMesasInput | Prisma.reservaCreateOrConnectWithoutMesasInput[]
-  upsert?: Prisma.reservaUpsertWithWhereUniqueWithoutMesasInput | Prisma.reservaUpsertWithWhereUniqueWithoutMesasInput[]
+export type reservaUncheckedUpdateManyWithoutMesaNestedInput = {
+  create?: Prisma.XOR<Prisma.reservaCreateWithoutMesaInput, Prisma.reservaUncheckedCreateWithoutMesaInput> | Prisma.reservaCreateWithoutMesaInput[] | Prisma.reservaUncheckedCreateWithoutMesaInput[]
+  connectOrCreate?: Prisma.reservaCreateOrConnectWithoutMesaInput | Prisma.reservaCreateOrConnectWithoutMesaInput[]
+  upsert?: Prisma.reservaUpsertWithWhereUniqueWithoutMesaInput | Prisma.reservaUpsertWithWhereUniqueWithoutMesaInput[]
+  createMany?: Prisma.reservaCreateManyMesaInputEnvelope
   set?: Prisma.reservaWhereUniqueInput | Prisma.reservaWhereUniqueInput[]
   disconnect?: Prisma.reservaWhereUniqueInput | Prisma.reservaWhereUniqueInput[]
   delete?: Prisma.reservaWhereUniqueInput | Prisma.reservaWhereUniqueInput[]
   connect?: Prisma.reservaWhereUniqueInput | Prisma.reservaWhereUniqueInput[]
-  update?: Prisma.reservaUpdateWithWhereUniqueWithoutMesasInput | Prisma.reservaUpdateWithWhereUniqueWithoutMesasInput[]
-  updateMany?: Prisma.reservaUpdateManyWithWhereWithoutMesasInput | Prisma.reservaUpdateManyWithWhereWithoutMesasInput[]
+  update?: Prisma.reservaUpdateWithWhereUniqueWithoutMesaInput | Prisma.reservaUpdateWithWhereUniqueWithoutMesaInput[]
+  updateMany?: Prisma.reservaUpdateManyWithWhereWithoutMesaInput | Prisma.reservaUpdateManyWithWhereWithoutMesaInput[]
   deleteMany?: Prisma.reservaScalarWhereInput | Prisma.reservaScalarWhereInput[]
 }
 
-export type reservaCreateWithoutMesasInput = {
+export type reservaCreateWithoutMesaInput = {
   fecha: Date | string
   nombre_cliente: string
   telefono_cliente: string
-  estado: $Enums.estado_reserva
+  estado?: $Enums.estado_reserva
   motivo_cancelacion?: string | null
+  cantidad_personas: number
 }
 
-export type reservaUncheckedCreateWithoutMesasInput = {
+export type reservaUncheckedCreateWithoutMesaInput = {
   id?: number
   fecha: Date | string
   nombre_cliente: string
   telefono_cliente: string
-  estado: $Enums.estado_reserva
+  estado?: $Enums.estado_reserva
   motivo_cancelacion?: string | null
+  cantidad_personas: number
 }
 
-export type reservaCreateOrConnectWithoutMesasInput = {
+export type reservaCreateOrConnectWithoutMesaInput = {
   where: Prisma.reservaWhereUniqueInput
-  create: Prisma.XOR<Prisma.reservaCreateWithoutMesasInput, Prisma.reservaUncheckedCreateWithoutMesasInput>
+  create: Prisma.XOR<Prisma.reservaCreateWithoutMesaInput, Prisma.reservaUncheckedCreateWithoutMesaInput>
 }
 
-export type reservaUpsertWithWhereUniqueWithoutMesasInput = {
+export type reservaCreateManyMesaInputEnvelope = {
+  data: Prisma.reservaCreateManyMesaInput | Prisma.reservaCreateManyMesaInput[]
+  skipDuplicates?: boolean
+}
+
+export type reservaUpsertWithWhereUniqueWithoutMesaInput = {
   where: Prisma.reservaWhereUniqueInput
-  update: Prisma.XOR<Prisma.reservaUpdateWithoutMesasInput, Prisma.reservaUncheckedUpdateWithoutMesasInput>
-  create: Prisma.XOR<Prisma.reservaCreateWithoutMesasInput, Prisma.reservaUncheckedCreateWithoutMesasInput>
+  update: Prisma.XOR<Prisma.reservaUpdateWithoutMesaInput, Prisma.reservaUncheckedUpdateWithoutMesaInput>
+  create: Prisma.XOR<Prisma.reservaCreateWithoutMesaInput, Prisma.reservaUncheckedCreateWithoutMesaInput>
 }
 
-export type reservaUpdateWithWhereUniqueWithoutMesasInput = {
+export type reservaUpdateWithWhereUniqueWithoutMesaInput = {
   where: Prisma.reservaWhereUniqueInput
-  data: Prisma.XOR<Prisma.reservaUpdateWithoutMesasInput, Prisma.reservaUncheckedUpdateWithoutMesasInput>
+  data: Prisma.XOR<Prisma.reservaUpdateWithoutMesaInput, Prisma.reservaUncheckedUpdateWithoutMesaInput>
 }
 
-export type reservaUpdateManyWithWhereWithoutMesasInput = {
+export type reservaUpdateManyWithWhereWithoutMesaInput = {
   where: Prisma.reservaScalarWhereInput
-  data: Prisma.XOR<Prisma.reservaUpdateManyMutationInput, Prisma.reservaUncheckedUpdateManyWithoutMesasInput>
+  data: Prisma.XOR<Prisma.reservaUpdateManyMutationInput, Prisma.reservaUncheckedUpdateManyWithoutMesaInput>
 }
 
 export type reservaScalarWhereInput = {
@@ -483,63 +545,49 @@ export type reservaScalarWhereInput = {
   telefono_cliente?: Prisma.StringFilter<"reserva"> | string
   estado?: Prisma.Enumestado_reservaFilter<"reserva"> | $Enums.estado_reserva
   motivo_cancelacion?: Prisma.StringNullableFilter<"reserva"> | string | null
+  cantidad_personas?: Prisma.IntFilter<"reserva"> | number
+  id_mesa?: Prisma.IntFilter<"reserva"> | number
 }
 
-export type reservaUpdateWithoutMesasInput = {
+export type reservaCreateManyMesaInput = {
+  id?: number
+  fecha: Date | string
+  nombre_cliente: string
+  telefono_cliente: string
+  estado?: $Enums.estado_reserva
+  motivo_cancelacion?: string | null
+  cantidad_personas: number
+}
+
+export type reservaUpdateWithoutMesaInput = {
   fecha?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   nombre_cliente?: Prisma.StringFieldUpdateOperationsInput | string
   telefono_cliente?: Prisma.StringFieldUpdateOperationsInput | string
   estado?: Prisma.Enumestado_reservaFieldUpdateOperationsInput | $Enums.estado_reserva
   motivo_cancelacion?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  cantidad_personas?: Prisma.IntFieldUpdateOperationsInput | number
 }
 
-export type reservaUncheckedUpdateWithoutMesasInput = {
+export type reservaUncheckedUpdateWithoutMesaInput = {
   id?: Prisma.IntFieldUpdateOperationsInput | number
   fecha?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   nombre_cliente?: Prisma.StringFieldUpdateOperationsInput | string
   telefono_cliente?: Prisma.StringFieldUpdateOperationsInput | string
   estado?: Prisma.Enumestado_reservaFieldUpdateOperationsInput | $Enums.estado_reserva
   motivo_cancelacion?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  cantidad_personas?: Prisma.IntFieldUpdateOperationsInput | number
 }
 
-export type reservaUncheckedUpdateManyWithoutMesasInput = {
+export type reservaUncheckedUpdateManyWithoutMesaInput = {
   id?: Prisma.IntFieldUpdateOperationsInput | number
   fecha?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   nombre_cliente?: Prisma.StringFieldUpdateOperationsInput | string
   telefono_cliente?: Prisma.StringFieldUpdateOperationsInput | string
   estado?: Prisma.Enumestado_reservaFieldUpdateOperationsInput | $Enums.estado_reserva
   motivo_cancelacion?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  cantidad_personas?: Prisma.IntFieldUpdateOperationsInput | number
 }
 
-
-/**
- * Count Type ReservaCountOutputType
- */
-
-export type ReservaCountOutputType = {
-  mesas: number
-}
-
-export type ReservaCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  mesas?: boolean | ReservaCountOutputTypeCountMesasArgs
-}
-
-/**
- * ReservaCountOutputType without action
- */
-export type ReservaCountOutputTypeDefaultArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  /**
-   * Select specific fields to fetch from the ReservaCountOutputType
-   */
-  select?: Prisma.ReservaCountOutputTypeSelect<ExtArgs> | null
-}
-
-/**
- * ReservaCountOutputType without action
- */
-export type ReservaCountOutputTypeCountMesasArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  where?: Prisma.mesaWhereInput
-}
 
 
 export type reservaSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
@@ -549,8 +597,9 @@ export type reservaSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs 
   telefono_cliente?: boolean
   estado?: boolean
   motivo_cancelacion?: boolean
-  mesas?: boolean | Prisma.reserva$mesasArgs<ExtArgs>
-  _count?: boolean | Prisma.ReservaCountOutputTypeDefaultArgs<ExtArgs>
+  cantidad_personas?: boolean
+  id_mesa?: boolean
+  mesa?: boolean | Prisma.mesaDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["reserva"]>
 
 export type reservaSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
@@ -560,6 +609,9 @@ export type reservaSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Exten
   telefono_cliente?: boolean
   estado?: boolean
   motivo_cancelacion?: boolean
+  cantidad_personas?: boolean
+  id_mesa?: boolean
+  mesa?: boolean | Prisma.mesaDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["reserva"]>
 
 export type reservaSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
@@ -569,6 +621,9 @@ export type reservaSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Exten
   telefono_cliente?: boolean
   estado?: boolean
   motivo_cancelacion?: boolean
+  cantidad_personas?: boolean
+  id_mesa?: boolean
+  mesa?: boolean | Prisma.mesaDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["reserva"]>
 
 export type reservaSelectScalar = {
@@ -578,20 +633,25 @@ export type reservaSelectScalar = {
   telefono_cliente?: boolean
   estado?: boolean
   motivo_cancelacion?: boolean
+  cantidad_personas?: boolean
+  id_mesa?: boolean
 }
 
-export type reservaOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "fecha" | "nombre_cliente" | "telefono_cliente" | "estado" | "motivo_cancelacion", ExtArgs["result"]["reserva"]>
+export type reservaOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "fecha" | "nombre_cliente" | "telefono_cliente" | "estado" | "motivo_cancelacion" | "cantidad_personas" | "id_mesa", ExtArgs["result"]["reserva"]>
 export type reservaInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  mesas?: boolean | Prisma.reserva$mesasArgs<ExtArgs>
-  _count?: boolean | Prisma.ReservaCountOutputTypeDefaultArgs<ExtArgs>
+  mesa?: boolean | Prisma.mesaDefaultArgs<ExtArgs>
 }
-export type reservaIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {}
-export type reservaIncludeUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {}
+export type reservaIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  mesa?: boolean | Prisma.mesaDefaultArgs<ExtArgs>
+}
+export type reservaIncludeUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  mesa?: boolean | Prisma.mesaDefaultArgs<ExtArgs>
+}
 
 export type $reservaPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   name: "reserva"
   objects: {
-    mesas: Prisma.$mesaPayload<ExtArgs>[]
+    mesa: Prisma.$mesaPayload<ExtArgs>
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: number
@@ -600,6 +660,8 @@ export type $reservaPayload<ExtArgs extends runtime.Types.Extensions.InternalArg
     telefono_cliente: string
     estado: $Enums.estado_reserva
     motivo_cancelacion: string | null
+    cantidad_personas: number
+    id_mesa: number
   }, ExtArgs["result"]["reserva"]>
   composites: {}
 }
@@ -994,7 +1056,7 @@ readonly fields: reservaFieldRefs;
  */
 export interface Prisma__reservaClient<T, Null = never, ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
   readonly [Symbol.toStringTag]: "PrismaPromise"
-  mesas<T extends Prisma.reserva$mesasArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.reserva$mesasArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$mesaPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  mesa<T extends Prisma.mesaDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.mesaDefaultArgs<ExtArgs>>): Prisma.Prisma__mesaClient<runtime.Types.Result.GetResult<Prisma.$mesaPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
   /**
    * Attaches callbacks for the resolution and/or rejection of the Promise.
    * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -1030,6 +1092,8 @@ export interface reservaFieldRefs {
   readonly telefono_cliente: Prisma.FieldRef<"reserva", 'String'>
   readonly estado: Prisma.FieldRef<"reserva", 'estado_reserva'>
   readonly motivo_cancelacion: Prisma.FieldRef<"reserva", 'String'>
+  readonly cantidad_personas: Prisma.FieldRef<"reserva", 'Int'>
+  readonly id_mesa: Prisma.FieldRef<"reserva", 'Int'>
 }
     
 
@@ -1284,6 +1348,10 @@ export type reservaCreateManyAndReturnArgs<ExtArgs extends runtime.Types.Extensi
    */
   data: Prisma.reservaCreateManyInput | Prisma.reservaCreateManyInput[]
   skipDuplicates?: boolean
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.reservaIncludeCreateManyAndReturn<ExtArgs> | null
 }
 
 /**
@@ -1354,6 +1422,10 @@ export type reservaUpdateManyAndReturnArgs<ExtArgs extends runtime.Types.Extensi
    * Limit how many reservas to update.
    */
   limit?: number
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.reservaIncludeUpdateManyAndReturn<ExtArgs> | null
 }
 
 /**
@@ -1420,30 +1492,6 @@ export type reservaDeleteManyArgs<ExtArgs extends runtime.Types.Extensions.Inter
    * Limit how many reservas to delete.
    */
   limit?: number
-}
-
-/**
- * reserva.mesas
- */
-export type reserva$mesasArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  /**
-   * Select specific fields to fetch from the mesa
-   */
-  select?: Prisma.mesaSelect<ExtArgs> | null
-  /**
-   * Omit specific fields from the mesa
-   */
-  omit?: Prisma.mesaOmit<ExtArgs> | null
-  /**
-   * Choose, which related nodes to fetch as well
-   */
-  include?: Prisma.mesaInclude<ExtArgs> | null
-  where?: Prisma.mesaWhereInput
-  orderBy?: Prisma.mesaOrderByWithRelationInput | Prisma.mesaOrderByWithRelationInput[]
-  cursor?: Prisma.mesaWhereUniqueInput
-  take?: number
-  skip?: number
-  distinct?: Prisma.MesaScalarFieldEnum | Prisma.MesaScalarFieldEnum[]
 }
 
 /**

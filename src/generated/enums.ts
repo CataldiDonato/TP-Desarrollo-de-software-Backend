@@ -35,6 +35,15 @@ export const estado_reserva = {
 export type estado_reserva = (typeof estado_reserva)[keyof typeof estado_reserva]
 
 
+export const estado_mesa = {
+  Libre: 'Libre',
+  Ocupada: 'Ocupada',
+  Reservada: 'Reservada'
+} as const
+
+export type estado_mesa = (typeof estado_mesa)[keyof typeof estado_mesa]
+
+
 export const estado_comanda = {
   Abierta: 'Abierta',
   Pagada: 'Pagada',

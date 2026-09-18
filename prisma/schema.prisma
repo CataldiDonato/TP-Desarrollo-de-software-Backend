@@ -65,11 +65,16 @@ model reserva {
   fecha DateTime
   nombre_cliente String
   telefono_cliente String
-  estado estado_reserva
+  estado estado_reserva @default(Confirmada)
   motivo_cancelacion String?
+  cantidad_personas Int
+
+  id_mesa Int
 
   // Relacion con mesa
-  mesas mesa[]
+  mesa mesa @relation(fields: [id_mesa], references: [id])
+
+  
 }
 
 enum estado_reserva {
@@ -80,6 +85,7 @@ enum estado_reserva {
 model mesa {
   id Int @id @default(autoincrement())
   capacidad Int
+  estado estado_mesa @default(Libre)
 
   // Relacion con comanda 
   comandas comanda[]
@@ -87,6 +93,13 @@ model mesa {
   // Relacion con reserva
   reservas reserva[]
 }
+
+enum estado_mesa {
+  Libre
+  Ocupada
+  Reservada
+}
+
 
 model comanda {
   id Int @id @default(autoincrement())
@@ -114,7 +127,6 @@ enum estado_comanda {
   Pagada      // El cliente ya pagó y se cerró la mesa
   Cancelada   // Hubo un error y se anuló la comanda
 }
-
 
 
 
@@ -183,3 +195,5 @@ enum estado_detalle_comanda {
   En_Preparacion
   Finalizada
 }
+
+

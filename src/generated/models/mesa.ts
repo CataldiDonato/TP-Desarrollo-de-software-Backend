@@ -39,16 +39,19 @@ export type MesaSumAggregateOutputType = {
 export type MesaMinAggregateOutputType = {
   id: number | null
   capacidad: number | null
+  estado: $Enums.estado_mesa | null
 }
 
 export type MesaMaxAggregateOutputType = {
   id: number | null
   capacidad: number | null
+  estado: $Enums.estado_mesa | null
 }
 
 export type MesaCountAggregateOutputType = {
   id: number
   capacidad: number
+  estado: number
   _all: number
 }
 
@@ -66,16 +69,19 @@ export type MesaSumAggregateInputType = {
 export type MesaMinAggregateInputType = {
   id?: true
   capacidad?: true
+  estado?: true
 }
 
 export type MesaMaxAggregateInputType = {
   id?: true
   capacidad?: true
+  estado?: true
 }
 
 export type MesaCountAggregateInputType = {
   id?: true
   capacidad?: true
+  estado?: true
   _all?: true
 }
 
@@ -168,6 +174,7 @@ export type mesaGroupByArgs<ExtArgs extends runtime.Types.Extensions.InternalArg
 export type MesaGroupByOutputType = {
   id: number
   capacidad: number
+  estado: $Enums.estado_mesa
   _count: MesaCountAggregateOutputType | null
   _avg: MesaAvgAggregateOutputType | null
   _sum: MesaSumAggregateOutputType | null
@@ -196,6 +203,7 @@ export type mesaWhereInput = {
   NOT?: Prisma.mesaWhereInput | Prisma.mesaWhereInput[]
   id?: Prisma.IntFilter<"mesa"> | number
   capacidad?: Prisma.IntFilter<"mesa"> | number
+  estado?: Prisma.Enumestado_mesaFilter<"mesa"> | $Enums.estado_mesa
   comandas?: Prisma.ComandaListRelationFilter
   reservas?: Prisma.ReservaListRelationFilter
 }
@@ -203,6 +211,7 @@ export type mesaWhereInput = {
 export type mesaOrderByWithRelationInput = {
   id?: Prisma.SortOrder
   capacidad?: Prisma.SortOrder
+  estado?: Prisma.SortOrder
   comandas?: Prisma.comandaOrderByRelationAggregateInput
   reservas?: Prisma.reservaOrderByRelationAggregateInput
 }
@@ -213,6 +222,7 @@ export type mesaWhereUniqueInput = Prisma.AtLeast<{
   OR?: Prisma.mesaWhereInput[]
   NOT?: Prisma.mesaWhereInput | Prisma.mesaWhereInput[]
   capacidad?: Prisma.IntFilter<"mesa"> | number
+  estado?: Prisma.Enumestado_mesaFilter<"mesa"> | $Enums.estado_mesa
   comandas?: Prisma.ComandaListRelationFilter
   reservas?: Prisma.ReservaListRelationFilter
 }, "id">
@@ -220,6 +230,7 @@ export type mesaWhereUniqueInput = Prisma.AtLeast<{
 export type mesaOrderByWithAggregationInput = {
   id?: Prisma.SortOrder
   capacidad?: Prisma.SortOrder
+  estado?: Prisma.SortOrder
   _count?: Prisma.mesaCountOrderByAggregateInput
   _avg?: Prisma.mesaAvgOrderByAggregateInput
   _max?: Prisma.mesaMaxOrderByAggregateInput
@@ -233,61 +244,65 @@ export type mesaScalarWhereWithAggregatesInput = {
   NOT?: Prisma.mesaScalarWhereWithAggregatesInput | Prisma.mesaScalarWhereWithAggregatesInput[]
   id?: Prisma.IntWithAggregatesFilter<"mesa"> | number
   capacidad?: Prisma.IntWithAggregatesFilter<"mesa"> | number
+  estado?: Prisma.Enumestado_mesaWithAggregatesFilter<"mesa"> | $Enums.estado_mesa
 }
 
 export type mesaCreateInput = {
   capacidad: number
+  estado?: $Enums.estado_mesa
   comandas?: Prisma.comandaCreateNestedManyWithoutMesaInput
-  reservas?: Prisma.reservaCreateNestedManyWithoutMesasInput
+  reservas?: Prisma.reservaCreateNestedManyWithoutMesaInput
 }
 
 export type mesaUncheckedCreateInput = {
   id?: number
   capacidad: number
+  estado?: $Enums.estado_mesa
   comandas?: Prisma.comandaUncheckedCreateNestedManyWithoutMesaInput
-  reservas?: Prisma.reservaUncheckedCreateNestedManyWithoutMesasInput
+  reservas?: Prisma.reservaUncheckedCreateNestedManyWithoutMesaInput
 }
 
 export type mesaUpdateInput = {
   capacidad?: Prisma.IntFieldUpdateOperationsInput | number
+  estado?: Prisma.Enumestado_mesaFieldUpdateOperationsInput | $Enums.estado_mesa
   comandas?: Prisma.comandaUpdateManyWithoutMesaNestedInput
-  reservas?: Prisma.reservaUpdateManyWithoutMesasNestedInput
+  reservas?: Prisma.reservaUpdateManyWithoutMesaNestedInput
 }
 
 export type mesaUncheckedUpdateInput = {
   id?: Prisma.IntFieldUpdateOperationsInput | number
   capacidad?: Prisma.IntFieldUpdateOperationsInput | number
+  estado?: Prisma.Enumestado_mesaFieldUpdateOperationsInput | $Enums.estado_mesa
   comandas?: Prisma.comandaUncheckedUpdateManyWithoutMesaNestedInput
-  reservas?: Prisma.reservaUncheckedUpdateManyWithoutMesasNestedInput
+  reservas?: Prisma.reservaUncheckedUpdateManyWithoutMesaNestedInput
 }
 
 export type mesaCreateManyInput = {
   id?: number
   capacidad: number
+  estado?: $Enums.estado_mesa
 }
 
 export type mesaUpdateManyMutationInput = {
   capacidad?: Prisma.IntFieldUpdateOperationsInput | number
+  estado?: Prisma.Enumestado_mesaFieldUpdateOperationsInput | $Enums.estado_mesa
 }
 
 export type mesaUncheckedUpdateManyInput = {
   id?: Prisma.IntFieldUpdateOperationsInput | number
   capacidad?: Prisma.IntFieldUpdateOperationsInput | number
+  estado?: Prisma.Enumestado_mesaFieldUpdateOperationsInput | $Enums.estado_mesa
 }
 
-export type MesaListRelationFilter = {
-  every?: Prisma.mesaWhereInput
-  some?: Prisma.mesaWhereInput
-  none?: Prisma.mesaWhereInput
-}
-
-export type mesaOrderByRelationAggregateInput = {
-  _count?: Prisma.SortOrder
+export type MesaScalarRelationFilter = {
+  is?: Prisma.mesaWhereInput
+  isNot?: Prisma.mesaWhereInput
 }
 
 export type mesaCountOrderByAggregateInput = {
   id?: Prisma.SortOrder
   capacidad?: Prisma.SortOrder
+  estado?: Prisma.SortOrder
 }
 
 export type mesaAvgOrderByAggregateInput = {
@@ -298,11 +313,13 @@ export type mesaAvgOrderByAggregateInput = {
 export type mesaMaxOrderByAggregateInput = {
   id?: Prisma.SortOrder
   capacidad?: Prisma.SortOrder
+  estado?: Prisma.SortOrder
 }
 
 export type mesaMinOrderByAggregateInput = {
   id?: Prisma.SortOrder
   capacidad?: Prisma.SortOrder
+  estado?: Prisma.SortOrder
 }
 
 export type mesaSumOrderByAggregateInput = {
@@ -310,47 +327,22 @@ export type mesaSumOrderByAggregateInput = {
   capacidad?: Prisma.SortOrder
 }
 
-export type MesaScalarRelationFilter = {
-  is?: Prisma.mesaWhereInput
-  isNot?: Prisma.mesaWhereInput
+export type mesaCreateNestedOneWithoutReservasInput = {
+  create?: Prisma.XOR<Prisma.mesaCreateWithoutReservasInput, Prisma.mesaUncheckedCreateWithoutReservasInput>
+  connectOrCreate?: Prisma.mesaCreateOrConnectWithoutReservasInput
+  connect?: Prisma.mesaWhereUniqueInput
 }
 
-export type mesaCreateNestedManyWithoutReservasInput = {
-  create?: Prisma.XOR<Prisma.mesaCreateWithoutReservasInput, Prisma.mesaUncheckedCreateWithoutReservasInput> | Prisma.mesaCreateWithoutReservasInput[] | Prisma.mesaUncheckedCreateWithoutReservasInput[]
-  connectOrCreate?: Prisma.mesaCreateOrConnectWithoutReservasInput | Prisma.mesaCreateOrConnectWithoutReservasInput[]
-  connect?: Prisma.mesaWhereUniqueInput | Prisma.mesaWhereUniqueInput[]
+export type mesaUpdateOneRequiredWithoutReservasNestedInput = {
+  create?: Prisma.XOR<Prisma.mesaCreateWithoutReservasInput, Prisma.mesaUncheckedCreateWithoutReservasInput>
+  connectOrCreate?: Prisma.mesaCreateOrConnectWithoutReservasInput
+  upsert?: Prisma.mesaUpsertWithoutReservasInput
+  connect?: Prisma.mesaWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.mesaUpdateToOneWithWhereWithoutReservasInput, Prisma.mesaUpdateWithoutReservasInput>, Prisma.mesaUncheckedUpdateWithoutReservasInput>
 }
 
-export type mesaUncheckedCreateNestedManyWithoutReservasInput = {
-  create?: Prisma.XOR<Prisma.mesaCreateWithoutReservasInput, Prisma.mesaUncheckedCreateWithoutReservasInput> | Prisma.mesaCreateWithoutReservasInput[] | Prisma.mesaUncheckedCreateWithoutReservasInput[]
-  connectOrCreate?: Prisma.mesaCreateOrConnectWithoutReservasInput | Prisma.mesaCreateOrConnectWithoutReservasInput[]
-  connect?: Prisma.mesaWhereUniqueInput | Prisma.mesaWhereUniqueInput[]
-}
-
-export type mesaUpdateManyWithoutReservasNestedInput = {
-  create?: Prisma.XOR<Prisma.mesaCreateWithoutReservasInput, Prisma.mesaUncheckedCreateWithoutReservasInput> | Prisma.mesaCreateWithoutReservasInput[] | Prisma.mesaUncheckedCreateWithoutReservasInput[]
-  connectOrCreate?: Prisma.mesaCreateOrConnectWithoutReservasInput | Prisma.mesaCreateOrConnectWithoutReservasInput[]
-  upsert?: Prisma.mesaUpsertWithWhereUniqueWithoutReservasInput | Prisma.mesaUpsertWithWhereUniqueWithoutReservasInput[]
-  set?: Prisma.mesaWhereUniqueInput | Prisma.mesaWhereUniqueInput[]
-  disconnect?: Prisma.mesaWhereUniqueInput | Prisma.mesaWhereUniqueInput[]
-  delete?: Prisma.mesaWhereUniqueInput | Prisma.mesaWhereUniqueInput[]
-  connect?: Prisma.mesaWhereUniqueInput | Prisma.mesaWhereUniqueInput[]
-  update?: Prisma.mesaUpdateWithWhereUniqueWithoutReservasInput | Prisma.mesaUpdateWithWhereUniqueWithoutReservasInput[]
-  updateMany?: Prisma.mesaUpdateManyWithWhereWithoutReservasInput | Prisma.mesaUpdateManyWithWhereWithoutReservasInput[]
-  deleteMany?: Prisma.mesaScalarWhereInput | Prisma.mesaScalarWhereInput[]
-}
-
-export type mesaUncheckedUpdateManyWithoutReservasNestedInput = {
-  create?: Prisma.XOR<Prisma.mesaCreateWithoutReservasInput, Prisma.mesaUncheckedCreateWithoutReservasInput> | Prisma.mesaCreateWithoutReservasInput[] | Prisma.mesaUncheckedCreateWithoutReservasInput[]
-  connectOrCreate?: Prisma.mesaCreateOrConnectWithoutReservasInput | Prisma.mesaCreateOrConnectWithoutReservasInput[]
-  upsert?: Prisma.mesaUpsertWithWhereUniqueWithoutReservasInput | Prisma.mesaUpsertWithWhereUniqueWithoutReservasInput[]
-  set?: Prisma.mesaWhereUniqueInput | Prisma.mesaWhereUniqueInput[]
-  disconnect?: Prisma.mesaWhereUniqueInput | Prisma.mesaWhereUniqueInput[]
-  delete?: Prisma.mesaWhereUniqueInput | Prisma.mesaWhereUniqueInput[]
-  connect?: Prisma.mesaWhereUniqueInput | Prisma.mesaWhereUniqueInput[]
-  update?: Prisma.mesaUpdateWithWhereUniqueWithoutReservasInput | Prisma.mesaUpdateWithWhereUniqueWithoutReservasInput[]
-  updateMany?: Prisma.mesaUpdateManyWithWhereWithoutReservasInput | Prisma.mesaUpdateManyWithWhereWithoutReservasInput[]
-  deleteMany?: Prisma.mesaScalarWhereInput | Prisma.mesaScalarWhereInput[]
+export type Enumestado_mesaFieldUpdateOperationsInput = {
+  set?: $Enums.estado_mesa
 }
 
 export type mesaCreateNestedOneWithoutComandasInput = {
@@ -369,12 +361,14 @@ export type mesaUpdateOneRequiredWithoutComandasNestedInput = {
 
 export type mesaCreateWithoutReservasInput = {
   capacidad: number
+  estado?: $Enums.estado_mesa
   comandas?: Prisma.comandaCreateNestedManyWithoutMesaInput
 }
 
 export type mesaUncheckedCreateWithoutReservasInput = {
   id?: number
   capacidad: number
+  estado?: $Enums.estado_mesa
   comandas?: Prisma.comandaUncheckedCreateNestedManyWithoutMesaInput
 }
 
@@ -383,39 +377,41 @@ export type mesaCreateOrConnectWithoutReservasInput = {
   create: Prisma.XOR<Prisma.mesaCreateWithoutReservasInput, Prisma.mesaUncheckedCreateWithoutReservasInput>
 }
 
-export type mesaUpsertWithWhereUniqueWithoutReservasInput = {
-  where: Prisma.mesaWhereUniqueInput
+export type mesaUpsertWithoutReservasInput = {
   update: Prisma.XOR<Prisma.mesaUpdateWithoutReservasInput, Prisma.mesaUncheckedUpdateWithoutReservasInput>
   create: Prisma.XOR<Prisma.mesaCreateWithoutReservasInput, Prisma.mesaUncheckedCreateWithoutReservasInput>
+  where?: Prisma.mesaWhereInput
 }
 
-export type mesaUpdateWithWhereUniqueWithoutReservasInput = {
-  where: Prisma.mesaWhereUniqueInput
+export type mesaUpdateToOneWithWhereWithoutReservasInput = {
+  where?: Prisma.mesaWhereInput
   data: Prisma.XOR<Prisma.mesaUpdateWithoutReservasInput, Prisma.mesaUncheckedUpdateWithoutReservasInput>
 }
 
-export type mesaUpdateManyWithWhereWithoutReservasInput = {
-  where: Prisma.mesaScalarWhereInput
-  data: Prisma.XOR<Prisma.mesaUpdateManyMutationInput, Prisma.mesaUncheckedUpdateManyWithoutReservasInput>
+export type mesaUpdateWithoutReservasInput = {
+  capacidad?: Prisma.IntFieldUpdateOperationsInput | number
+  estado?: Prisma.Enumestado_mesaFieldUpdateOperationsInput | $Enums.estado_mesa
+  comandas?: Prisma.comandaUpdateManyWithoutMesaNestedInput
 }
 
-export type mesaScalarWhereInput = {
-  AND?: Prisma.mesaScalarWhereInput | Prisma.mesaScalarWhereInput[]
-  OR?: Prisma.mesaScalarWhereInput[]
-  NOT?: Prisma.mesaScalarWhereInput | Prisma.mesaScalarWhereInput[]
-  id?: Prisma.IntFilter<"mesa"> | number
-  capacidad?: Prisma.IntFilter<"mesa"> | number
+export type mesaUncheckedUpdateWithoutReservasInput = {
+  id?: Prisma.IntFieldUpdateOperationsInput | number
+  capacidad?: Prisma.IntFieldUpdateOperationsInput | number
+  estado?: Prisma.Enumestado_mesaFieldUpdateOperationsInput | $Enums.estado_mesa
+  comandas?: Prisma.comandaUncheckedUpdateManyWithoutMesaNestedInput
 }
 
 export type mesaCreateWithoutComandasInput = {
   capacidad: number
-  reservas?: Prisma.reservaCreateNestedManyWithoutMesasInput
+  estado?: $Enums.estado_mesa
+  reservas?: Prisma.reservaCreateNestedManyWithoutMesaInput
 }
 
 export type mesaUncheckedCreateWithoutComandasInput = {
   id?: number
   capacidad: number
-  reservas?: Prisma.reservaUncheckedCreateNestedManyWithoutMesasInput
+  estado?: $Enums.estado_mesa
+  reservas?: Prisma.reservaUncheckedCreateNestedManyWithoutMesaInput
 }
 
 export type mesaCreateOrConnectWithoutComandasInput = {
@@ -436,29 +432,15 @@ export type mesaUpdateToOneWithWhereWithoutComandasInput = {
 
 export type mesaUpdateWithoutComandasInput = {
   capacidad?: Prisma.IntFieldUpdateOperationsInput | number
-  reservas?: Prisma.reservaUpdateManyWithoutMesasNestedInput
+  estado?: Prisma.Enumestado_mesaFieldUpdateOperationsInput | $Enums.estado_mesa
+  reservas?: Prisma.reservaUpdateManyWithoutMesaNestedInput
 }
 
 export type mesaUncheckedUpdateWithoutComandasInput = {
   id?: Prisma.IntFieldUpdateOperationsInput | number
   capacidad?: Prisma.IntFieldUpdateOperationsInput | number
-  reservas?: Prisma.reservaUncheckedUpdateManyWithoutMesasNestedInput
-}
-
-export type mesaUpdateWithoutReservasInput = {
-  capacidad?: Prisma.IntFieldUpdateOperationsInput | number
-  comandas?: Prisma.comandaUpdateManyWithoutMesaNestedInput
-}
-
-export type mesaUncheckedUpdateWithoutReservasInput = {
-  id?: Prisma.IntFieldUpdateOperationsInput | number
-  capacidad?: Prisma.IntFieldUpdateOperationsInput | number
-  comandas?: Prisma.comandaUncheckedUpdateManyWithoutMesaNestedInput
-}
-
-export type mesaUncheckedUpdateManyWithoutReservasInput = {
-  id?: Prisma.IntFieldUpdateOperationsInput | number
-  capacidad?: Prisma.IntFieldUpdateOperationsInput | number
+  estado?: Prisma.Enumestado_mesaFieldUpdateOperationsInput | $Enums.estado_mesa
+  reservas?: Prisma.reservaUncheckedUpdateManyWithoutMesaNestedInput
 }
 
 
@@ -504,6 +486,7 @@ export type MesaCountOutputTypeCountReservasArgs<ExtArgs extends runtime.Types.E
 export type mesaSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
   capacidad?: boolean
+  estado?: boolean
   comandas?: boolean | Prisma.mesa$comandasArgs<ExtArgs>
   reservas?: boolean | Prisma.mesa$reservasArgs<ExtArgs>
   _count?: boolean | Prisma.MesaCountOutputTypeDefaultArgs<ExtArgs>
@@ -512,19 +495,22 @@ export type mesaSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = r
 export type mesaSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
   capacidad?: boolean
+  estado?: boolean
 }, ExtArgs["result"]["mesa"]>
 
 export type mesaSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
   capacidad?: boolean
+  estado?: boolean
 }, ExtArgs["result"]["mesa"]>
 
 export type mesaSelectScalar = {
   id?: boolean
   capacidad?: boolean
+  estado?: boolean
 }
 
-export type mesaOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "capacidad", ExtArgs["result"]["mesa"]>
+export type mesaOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "capacidad" | "estado", ExtArgs["result"]["mesa"]>
 export type mesaInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   comandas?: boolean | Prisma.mesa$comandasArgs<ExtArgs>
   reservas?: boolean | Prisma.mesa$reservasArgs<ExtArgs>
@@ -542,6 +528,7 @@ export type $mesaPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs =
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: number
     capacidad: number
+    estado: $Enums.estado_mesa
   }, ExtArgs["result"]["mesa"]>
   composites: {}
 }
@@ -969,6 +956,7 @@ export interface Prisma__mesaClient<T, Null = never, ExtArgs extends runtime.Typ
 export interface mesaFieldRefs {
   readonly id: Prisma.FieldRef<"mesa", 'Int'>
   readonly capacidad: Prisma.FieldRef<"mesa", 'Int'>
+  readonly estado: Prisma.FieldRef<"mesa", 'estado_mesa'>
 }
     
 
