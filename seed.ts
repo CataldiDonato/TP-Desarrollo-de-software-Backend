@@ -30,6 +30,20 @@ async function main() {
   }
   console.log('5 Mesas creadas.');
 
+  // 3. Crear medios de pago básicos
+  const mediosPago = ['Efectivo', 'Transferencia', 'Tarjeta'];
+  for (let i = 0; i < mediosPago.length; i++) {
+    await prisma.medio_de_pago.upsert({
+      where: { id: i + 1 },
+      update: {},
+      create: {
+        id: i + 1,
+        tipo: mediosPago[i] as any
+      }
+    });
+  }
+  console.log('Medios de pago creados.');
+
   console.log('Carga inicial finalizada con éxito.');
 }
 
