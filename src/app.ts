@@ -13,6 +13,7 @@ import comandasRoutes from './routes/comanda.routes';
 import usuariosRoutes from './routes/usuarios.routes';
 import cocinaRoutes from './routes/cocina.routes';
 import dashboardRoutes from './routes/dashboard.routes';
+import mediosPagoRoutes from './routes/medio_pago.routes';
 
 const app: Application = express();
 
@@ -43,6 +44,7 @@ app.use('/api/comandas', comandasRoutes);
 app.use('/api/usuarios', usuariosRoutes);
 app.use('/api/cocina', cocinaRoutes);
 app.use('/api/dashboard', dashboardRoutes);
+app.use('/api/medios-pago', mediosPagoRoutes);
 
 // 5. Captura de rutas no existentes (Reemplaza el texto "Cannot GET")
 app.use((req: Request, res: Response) => {
