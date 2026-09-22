@@ -14,6 +14,8 @@ import usuariosRoutes from './routes/usuarios.routes';
 import cocinaRoutes from './routes/cocina.routes';
 import dashboardRoutes from './routes/dashboard.routes';
 import mediosPagoRoutes from './routes/medio_pago.routes';
+import authRoutes from './routes/auth.routes';
+import { verificarToken } from './middlewares/auth.middleware';
 
 const app: Application = express();
 
@@ -33,11 +35,13 @@ app.get('/', (req: Request, res: Response) => {
 
 // 4. Registro de endpoints de la API
 // (Descomenta la línea cuando la ruta correspondiente esté lista)
+app.use('/api/auth', authRoutes);
+app.use(verificarToken);
+
 app.use('/api/categorias', categoriasRoutes);
 app.use('/api/productos', productosRoutes);
 app.use('/api/precio-producto', precioProducto);
 app.use('/api/detalle-comanda', detalleComanda);
-
 app.use('/api/mesas', mesasRoutes);
 app.use('/api/reservas', reservasRoutes);
 app.use('/api/comandas', comandasRoutes);
