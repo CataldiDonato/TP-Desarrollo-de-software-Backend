@@ -1,10 +1,18 @@
 import prisma from '../config/db';
-import { estado_reserva } from '../generated/enums';
-
+import type { estado_reserva } from '../generated/enums';
+import type { CreateReserva, UpdateReserva } from '../services/reserva.service';
 
 export class ReservaRepository {
-    async findAll() {
-        return await prisma.reserva.findMany();
+    // Los dos filtros son opcionales y se pueden combinar.
+    async findAll(cliente?: string, desde?: Date, hasta?: Date) {
+        return await prisma.reserva.findMany({
+            where: {
+                // contains + insensitive: busca coincidencias parciales sin importar mayúsculas
+                nombre_cliente: cliente ? { contains: cliente, mode: 'insensitive' } : undefined,
+                fecha: desde && hasta ? { gte: desde, lt: hasta } : undefined
+            },
+            orderBy: { fecha: 'asc' }
+        });
     }
 
     async findById(id: number) {
@@ -13,73 +21,49 @@ export class ReservaRepository {
         });
     }
 
-    async findByFecha(fecha: Date) {
+    // Busca reservas confirmadas de la mesa que caigan entre "desde" y "hasta".
+    // "excluirId" sirve al editar, para que la reserva no choque consigo misma.
+    async findSuperpuestas(id_mesa: number, desde: Date, hasta: Date, excluirId?: number) {
         return await prisma.reserva.findMany({
-            where: { fecha }
+            where: {
+                id_mesa,
+                estado: 'Confirmada',
+                fecha: { gt: desde, lt: hasta },
+                id: excluirId ? { not: excluirId } : undefined
+            }
         });
     }
 
-
-    async findByCliente(nombre: string) {
-            return await prisma.reserva.findMany({
-                where: { 
-                    nombre_cliente: {
-                        contains: nombre // contains busca coincidencias parciales, no hace falta el nombre exacto
-                    }
-                }
-            });
-    }
-
-
-
-    async create (fecha: Date, cantidad_personas: number, id_mesa: number, nombre_cliente: string, telefono_cliente: string) {
+    async create(datos: CreateReserva) {
         return await prisma.reserva.create({
             data: {
-                fecha, 
-                cantidad_personas,
-                id_mesa,
-                nombre_cliente,
-                telefono_cliente,
-                estado: "Confirmada"
-            }
-        });
-    } 
-
-    async update(id: number, fecha: Date, cantidad_personas: number, id_mesa: number, nombre_cliente: string, telefono_cliente: string, estado: estado_reserva, motivo_cancelacion?: string,) {
-        return await prisma.reserva.update({
-            where: {id},
-            data: {
-                fecha,
-                cantidad_personas,
-                id_mesa,
-                nombre_cliente,
-                telefono_cliente,
-                estado,
-                motivo_cancelacion,
+                ...datos,
+                estado: 'Confirmada'
             }
         });
     }
 
-    
-    
-    //metodo exclusivo para modificar el estado y el motivo de cancelacion (sirve para el endpoint patch), así no hay q andar cambiando
-    //constantemente todos los datos de la reserva 
-
-    async updateEstado(id: number, estado: estado_reserva, motivo_cancelacion?: string) {
+    async update(id: number, datos: UpdateReserva) {
         return await prisma.reserva.update({
             where: { id },
-            data: { 
+            data: datos
+        });
+    }
+
+    // Método exclusivo para cambiar el estado (lo usa el endpoint PATCH /:id/estado).
+    async updateEstado(id: number, estado: estado_reserva, motivo_cancelacion: string | null) {
+        return await prisma.reserva.update({
+            where: { id },
+            data: {
                 estado,
-                motivo_cancelacion 
+                motivo_cancelacion
             }
         });
     }
 
     async delete(id: number) {
         return await prisma.reserva.delete({
-            where: {id}
+            where: { id }
         });
     }
 }
-    
-

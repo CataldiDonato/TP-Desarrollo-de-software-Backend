@@ -8,8 +8,10 @@
     "types": ["node"]
   },
   "include": [
-    "src/**/*", 
-    "index.ts", 
+    "src/**/*",
+    "tests/**/*",
+    "index.ts",
+    "seed.ts",
     "prisma.config.ts"
   ]
 }

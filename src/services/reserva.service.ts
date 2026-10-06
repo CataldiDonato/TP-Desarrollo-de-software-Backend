@@ -1,9 +1,18 @@
-import {ReservaRepository} from '../repositories/reserva.repository';
-import {MesaRepository} from '../repositories/mesa.repository';
-import type {estado_reserva} from '../generated/enums';
+import { ReservaRepository } from '../repositories/reserva.repository';
+import { MesaRepository } from '../repositories/mesa.repository';
+import { rangoDeReserva } from './mesa.service';
+import { AppError } from '../utils/app-error';
+import {
+    ESTADOS_RESERVA,
+    isPlainObject,
+    parseFecha,
+    parseOpcion,
+    parsePositiveId,
+    parsePositiveInt,
+    requireText
+} from '../utils/validation';
 
-
-//dto para crear
+// dto para crear
 export interface CreateReserva {
     fecha: Date;
     cantidad_personas: number;
@@ -12,176 +21,144 @@ export interface CreateReserva {
     telefono_cliente: string;
 }
 
-
-// dto para actualizar
+// dto para actualizar (todos los campos son opcionales)
 export interface UpdateReserva {
     fecha?: Date;
     cantidad_personas?: number;
     id_mesa?: number;
     nombre_cliente?: string;
     telefono_cliente?: string;
-    estado?: estado_reserva;
-    motivo_cancelacion?: string;
-
 }
-
 
 const repository_reserva = new ReservaRepository();
 const repository_mesa = new MesaRepository();
 
 export class ReservaService {
 
-    async getAll() {
-        return await repository_reserva.findAll();
+    // Filtros opcionales: ?cliente=juan y/o ?fecha=2026-10-10 (trae todo ese día).
+    // Si no hay resultados devuelve una lista vacía, no un error.
+    async getAll(cliente?: unknown, fecha?: unknown) {
+        const textoCliente = typeof cliente === 'string' && cliente.trim() !== '' ? cliente.trim() : undefined;
+
+        let desde: Date | undefined;
+        let hasta: Date | undefined;
+        if (typeof fecha === 'string' && fecha !== '') {
+            // "2026-10-10T00:00" se interpreta en la hora local del servidor
+            desde = parseFecha(`${fecha}T00:00`, 'fecha');
+            hasta = new Date(desde);
+            hasta.setDate(hasta.getDate() + 1);
+        }
+
+        return await repository_reserva.findAll(textoCliente, desde, hasta);
     }
 
-    async create(datos: CreateReserva) {
-
-        const mesa = await repository_mesa.findById(datos.id_mesa);
-
-        if (!mesa) {
-            throw new Error(`No existe una mesa con el id: "${datos.id_mesa}".`);
+    async create(input: unknown) {
+        if (!isPlainObject(input)) {
+            throw new AppError('El cuerpo de la solicitud debe ser un objeto JSON.');
         }
 
-        if (mesa.estado === 'Ocupada') {
-            throw new Error(`La mesa con el id: "${datos.id_mesa}" está ocupada.`);
+        const datos: CreateReserva = {
+            fecha: parseFecha(input.fecha, 'fecha'),
+            cantidad_personas: parsePositiveInt(input.cantidad_personas, 'cantidad_personas'),
+            id_mesa: parsePositiveId(input.id_mesa, 'id_mesa'),
+            nombre_cliente: requireText(input.nombre_cliente, 'nombre_cliente'),
+            telefono_cliente: requireText(input.telefono_cliente, 'telefono_cliente')
+        };
+
+        if (datos.fecha < new Date()) {
+            throw new AppError('No se puede reservar para una fecha que ya pasó.');
         }
 
-        if (datos.cantidad_personas > mesa.capacidad) {
-            throw new Error(`La cantidad de personas excede la capacidad de la mesa con el id: "${datos.id_mesa}".`);
-        }
+        await this.validarMesa(datos.id_mesa, datos.cantidad_personas);
+        await this.validarHorarioLibre(datos.id_mesa, datos.fecha);
 
-
-        if (datos.cantidad_personas <= 0) {
-            throw new Error(`La cantidad de personas debe ser mayor a cero.`);
-        }
-
-
-        return await repository_reserva.create(datos.fecha, datos.cantidad_personas, datos.id_mesa, datos.nombre_cliente, datos.telefono_cliente);
-
+        return await repository_reserva.create(datos);
     }
 
-
-    async getByNombreCliente(nombre: string) {
-        const reservas = await repository_reserva.findByCliente(nombre);
-        
-        // Si el arreglo viene con 0 elementos, error
-        if (reservas.length === 0) {
-            throw new Error(`No existe ninguna reserva con el nombre de cliente: "${nombre}".`);
-        }
-        return reservas;    
-    }
-
-
-    async getByFecha(fecha: Date) { 
-
-        const reservas = await repository_reserva.findByFecha(fecha);
-
-        if (reservas.length === 0) {
-            throw new Error(`No existe ninguna reserva con la fecha: "${fecha.toISOString().split('T')[0]}".`);
+    async update(id: number, input: unknown) {
+        if (!isPlainObject(input)) {
+            throw new AppError('El cuerpo de la solicitud debe ser un objeto JSON.');
         }
 
-        return reservas;
-    
-    }
-
-
-
-
-    async update(id: number, datos: UpdateReserva) {
         const reserva = await repository_reserva.findById(id);
-        
         if (!reserva) {
-            throw new Error(`No existe una reserva con el id: "${id}".`);
-        }
-        
-        if (datos.cantidad_personas !== undefined && datos.cantidad_personas <= 0) {
-            throw new Error(`La cantidad de personas no puede ser negativa.`);
+            throw new AppError(`No existe una reserva con el id ${id}.`, 404);
         }
 
+        // Solo se validan y actualizan los campos que vienen en el body.
+        const datos: UpdateReserva = {};
+        if (input.fecha !== undefined) datos.fecha = parseFecha(input.fecha, 'fecha');
+        if (input.cantidad_personas !== undefined) datos.cantidad_personas = parsePositiveInt(input.cantidad_personas, 'cantidad_personas');
+        if (input.id_mesa !== undefined) datos.id_mesa = parsePositiveId(input.id_mesa, 'id_mesa');
+        if (input.nombre_cliente !== undefined) datos.nombre_cliente = requireText(input.nombre_cliente, 'nombre_cliente');
+        if (input.telefono_cliente !== undefined) datos.telefono_cliente = requireText(input.telefono_cliente, 'telefono_cliente');
 
-        
-
-        if (datos.id_mesa) {
-            const mesa = await repository_mesa.findById(datos.id_mesa);
-
-            if (!mesa) {
-                throw new Error(`No existe una mesa con el id: "${datos.id_mesa}".`);
-            }
-
-            if (mesa.estado === 'Ocupada') {
-                throw new Error(`La mesa con el id: "${datos.id_mesa}" está ocupada, no podrá cambiarse a la misma.`);
-            }
-
-            // Usamos datos.cantidad_personas si lo mandaron, o la cantidad vieja si no lo mandaron
-            const cantidadAchequear = datos.cantidad_personas || reserva.cantidad_personas;
-            if (cantidadAchequear > mesa.capacidad) {
-                throw new Error(`La cantidad de personas excede la capacidad de la mesa con el id: "${datos.id_mesa}".`);
-            }
-
-
-             /*
-            if (datos.id_mesa && datos.cantidad_personas) {
-                const mesa = await repository_mesa.findById(datos.id_mesa);
-                if (datos.cantidad_personas > mesa.capacidad) {
-                    throw new Error(`La cantidad de personas excede la capacidad de la mesa con el id: "${datos.id_mesa}".`);
-                }
-            }
-            */
+        if (datos.fecha && datos.fecha < new Date()) {
+            throw new AppError('No se puede reservar para una fecha que ya pasó.');
         }
 
+        // Para validar usamos el dato nuevo si vino, o el que ya tenía la reserva.
+        const fecha = datos.fecha ?? reserva.fecha;
+        const cantidad = datos.cantidad_personas ?? reserva.cantidad_personas;
+        const id_mesa = datos.id_mesa ?? reserva.id_mesa;
 
+        await this.validarMesa(id_mesa, cantidad);
+        if (reserva.estado === 'Confirmada') {
+            await this.validarHorarioLibre(id_mesa, fecha, id);
+        }
 
-        //Mantenemos los datos viejos si no nos mandan los nuevos, esto evita que se borren algunos campos del registro
-        // en la base de datos en el caso que no lleguen todos los campos en el request body.
-
-        //El operador || devuelve el primer valor que no sea null o undefined, por lo que si datos.fecha es undefined, 
-        // se usará reserva.fecha, y así con todos los demás campos.
-        return await repository_reserva.update(
-            id, 
-            datos.fecha || reserva.fecha, 
-            datos.cantidad_personas || reserva.cantidad_personas, 
-            datos.id_mesa || reserva.id_mesa, 
-            datos.nombre_cliente || reserva.nombre_cliente, 
-            datos.telefono_cliente || reserva.telefono_cliente, 
-            datos.estado || reserva.estado, 
-            datos.motivo_cancelacion || reserva.motivo_cancelacion || undefined
-        );        
-
+        return await repository_reserva.update(id, datos);
     }
 
+    async updateEstado(id: number, input: unknown) {
+        if (!isPlainObject(input)) {
+            throw new AppError('El cuerpo de la solicitud debe ser un objeto JSON.');
+        }
 
-
-
-    async updateEstado(id: number, estado: estado_reserva, motivo_cancelacion?: string) {
-        //Validamos que la reserva exista
-        const reserva = await repository_reserva.findById(id); 
+        const reserva = await repository_reserva.findById(id);
         if (!reserva) {
-            throw new Error(`No existe una reserva con el id: "${id}".`);
+            throw new AppError(`No existe una reserva con el id ${id}.`, 404);
         }
 
-        //En el caso que el estado sea "Cancelada", validamos que se haya enviado el motivo de cancelación
-        if (estado === 'Cancelada' && !motivo_cancelacion) {
-            throw new Error(`Para cancelar una reserva es obligatorio enviar el motivo de cancelación.`);
+        const estado = parseOpcion(input.estado, ESTADOS_RESERVA, 'estado');
+
+        if (estado === 'Cancelada') {
+            // Para cancelar es obligatorio el motivo.
+            const motivo = requireText(input.motivo_cancelacion, 'motivo_cancelacion');
+            return await repository_reserva.updateEstado(id, estado, motivo);
         }
 
-       
-        return await repository_reserva.updateEstado(id, estado, motivo_cancelacion);
+        // Si se vuelve a confirmar, hay que chequear que el horario siga libre y se borra el motivo viejo.
+        await this.validarHorarioLibre(reserva.id_mesa, reserva.fecha, id);
+        return await repository_reserva.updateEstado(id, estado, null);
     }
-
-
-    
 
     async delete(id: number) {
-        const reserva = await repository_reserva.findById(id); 
-
+        const reserva = await repository_reserva.findById(id);
         if (!reserva) {
-            throw new Error(`No existe una reserva con el id: "${id}".`);
+            throw new AppError(`No existe una reserva con el id ${id}.`, 404);
         }
 
         return await repository_reserva.delete(id);
     }
 
+    private async validarMesa(id_mesa: number, cantidad_personas: number) {
+        const mesa = await repository_mesa.findById(id_mesa);
+        if (!mesa) {
+            throw new AppError(`No existe una mesa con el id ${id_mesa}.`, 404);
+        }
+        if (cantidad_personas > mesa.capacidad) {
+            throw new AppError(`La mesa ${id_mesa} tiene lugar para ${mesa.capacidad} personas.`);
+        }
+    }
 
+    // Una mesa no puede tener dos reservas confirmadas en horarios que se pisen.
+    private async validarHorarioLibre(id_mesa: number, fecha: Date, excluirId?: number) {
+        const { desde, hasta } = rangoDeReserva(fecha);
+        const superpuestas = await repository_reserva.findSuperpuestas(id_mesa, desde, hasta, excluirId);
 
+        if (superpuestas.length > 0) {
+            throw new AppError(`La mesa ${id_mesa} ya tiene una reserva cerca de ese horario.`, 409);
+        }
+    }
 }

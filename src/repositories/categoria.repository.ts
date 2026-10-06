@@ -2,38 +2,40 @@ import prisma from '../config/db';
 
 export class CategoriaRepository {
     async findAll() {
-        return await prisma.categoria.findMany();
+        return await prisma.categoria.findMany({
+            orderBy: { nombre: 'asc' }
+        });
     }
 
     async create(nombre: string) {
-        return await prisma.categoria.create({data: {nombre}});
-    };
+        return await prisma.categoria.create({ data: { nombre } });
+    }
 
     async delete(id: number) {
-        return await prisma.categoria.delete({where: {id}});
+        return await prisma.categoria.delete({ where: { id } });
     }
 
-    async update(id: number, nombre: string){
-        return await prisma.categoria.update({where: {id}, data: {nombre}})
+    async update(id: number, nombre: string) {
+        return await prisma.categoria.update({ where: { id }, data: { nombre } });
     }
 
-    async findByNombre(nombre: string){
-        return await prisma.categoria.findFirst(
-            {where: {
-                nombre:{
+    async findByNombre(nombre: string) {
+        return await prisma.categoria.findFirst({
+            where: {
+                nombre: {
                     equals: nombre,
                     mode: 'insensitive'
                 }
             }
-        });   
+        });
     }
 
     async findById(id: number) {
-    return await prisma.categoria.findUnique({
-        where: { id },
-        include: {
-            productos: true 
-        }
-    });
-}
+        return await prisma.categoria.findUnique({
+            where: { id },
+            include: {
+                productos: true
+            }
+        });
+    }
 }

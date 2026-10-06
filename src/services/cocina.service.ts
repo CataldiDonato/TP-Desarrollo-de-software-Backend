@@ -31,7 +31,8 @@ export class CocinaService {
             }));
     }
 
-    async actualizarEstado(input: unknown) {
+    // idCocinero es el usuario logueado (sale del token), así nadie puede hacerse pasar por otro cocinero.
+    async actualizarEstado(input: unknown, idCocinero: number) {
         if (!isPlainObject(input)) {
             throw new AppError('El cuerpo de la solicitud debe ser un objeto JSON.');
         }
@@ -39,9 +40,6 @@ export class CocinaService {
         const idComanda = parsePositiveId(input.id_comanda, 'id_comanda');
         const idProducto = parsePositiveId(input.id_producto, 'id_producto');
         const nuevoEstado = parseEstadoDetalle(input.estado);
-        const idCocinero = input.id_cocinero === undefined
-            ? undefined
-            : parsePositiveId(input.id_cocinero, 'id_cocinero');
 
         const detalle = await repository.findDetalle(idComanda, idProducto);
         if (!detalle) {
@@ -68,14 +66,10 @@ export class CocinaService {
         idComanda: number,
         idProducto: number,
         nuevoEstado: EstadoDetalle,
-        idCocinero: number | undefined
+        idCocinero: number
     ) {
         if (nuevoEstado !== 'En_Preparacion') {
             throw new AppError('Un pedido pendiente solo puede pasar a En_Preparacion.', 409);
-        }
-
-        if (!idCocinero) {
-            throw new AppError('Para iniciar la preparación debés indicar id_cocinero.');
         }
 
         const cocinero = await repository.findCocinero(idCocinero);
@@ -102,14 +96,14 @@ export class CocinaService {
         idComanda: number,
         idProducto: number,
         nuevoEstado: EstadoDetalle,
-        idCocinero: number | undefined,
+        idCocinero: number,
         idCocineroAsignado: number | null
     ) {
         if (nuevoEstado !== 'Finalizada') {
             throw new AppError('Un pedido en preparación solo puede pasar a Finalizada.', 409);
         }
 
-        if (!idCocinero || idCocinero !== idCocineroAsignado) {
+        if (idCocinero !== idCocineroAsignado) {
             throw new AppError('Solo el cocinero que tomó el pedido puede finalizarlo.', 403);
         }
 

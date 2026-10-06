@@ -7,7 +7,8 @@ const router = Router();
 
 router.use(verificarRol('Administrador', 'Mozo'));
 
-router.get('/', (req, res) => controller.findAll(req, res)); // Aunque los links son iguales funcionan distintos porque si es solo el link es get, pero para que sea post debe ser con un formuladio de HTML
+router.get('/', (req, res) => controller.findAll(req, res));
+router.get('/:id', (req, res) => controller.findById(req, res));
 router.post('/', (req, res) => controller.create(req, res));
 router.patch('/:id/estado', (req, res) => controller.update(req, res));
 

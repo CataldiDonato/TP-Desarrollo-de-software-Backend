@@ -6,6 +6,12 @@ export type RolUsuario = typeof ROLES_USUARIO[number];
 export const ESTADOS_DETALLE = ['Pendiente', 'En_Preparacion', 'Finalizada'] as const;
 export type EstadoDetalle = typeof ESTADOS_DETALLE[number];
 
+export const TIPOS_PRODUCTO = ['Plato', 'Bebida'] as const;
+export const TIPOS_PAGO = ['Efectivo', 'Transferencia', 'Tarjeta'] as const;
+export const ESTADOS_MESA = ['Libre', 'Ocupada', 'Reservada'] as const;
+export const ESTADOS_RESERVA = ['Confirmada', 'Cancelada'] as const;
+export const ESTADOS_COMANDA = ['Abierta', 'Pagada', 'Cancelada'] as const;
+
 export function parsePositiveId(value: unknown, field: string): number {
     const id = Number(value);
 
@@ -14,6 +20,43 @@ export function parsePositiveId(value: unknown, field: string): number {
     }
 
     return id;
+}
+
+// Igual que parsePositiveId, pero con un nombre más claro para cantidades y capacidades.
+export function parsePositiveInt(value: unknown, field: string): number {
+    return parsePositiveId(value, field);
+}
+
+export function parsePositiveNumber(value: unknown, field: string): number {
+    const numero = Number(value);
+
+    if (!Number.isFinite(numero) || numero <= 0) {
+        throw new AppError(`El campo '${field}' debe ser un número mayor a 0.`);
+    }
+
+    return numero;
+}
+
+export function parseFecha(value: unknown, field: string): Date {
+    if (typeof value !== 'string' || value.trim() === '') {
+        throw new AppError(`El campo '${field}' es obligatorio.`);
+    }
+
+    const fecha = new Date(value);
+    if (isNaN(fecha.getTime())) {
+        throw new AppError(`El campo '${field}' no tiene una fecha válida.`);
+    }
+
+    return fecha;
+}
+
+// Valida que el valor sea una de las opciones permitidas (sirve para los enums de Prisma).
+export function parseOpcion<T extends string>(value: unknown, opciones: readonly T[], field: string): T {
+    if (typeof value !== 'string' || !opciones.includes(value as T)) {
+        throw new AppError(`El campo '${field}' debe ser uno de: ${opciones.join(', ')}.`);
+    }
+
+    return value as T;
 }
 
 export function requireText(value: unknown, field: string, minLength = 1): string {

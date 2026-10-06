@@ -1,4 +1,5 @@
 import { DashboardRepository } from '../repositories/dashboard.repository';
+import { precioVigente } from '../utils/precios';
 
 const repository = new DashboardRepository();
 
@@ -22,17 +23,16 @@ export class DashboardService {
 
         for (const comanda of comandasPagadas) {
             for (const detalle of comanda.detalles_comandas) {
-                // El precio se obtiene de la lista vigente al momento en que se abrió la comanda.
-                const precioVigente = detalle.producto.precios.find(
-                    (precio) => precio.fecha_desde <= comanda.fecha
-                );
+                // El precio se obtiene de la lista vigente al momento en que se abrió la comanda
+                // (misma regla que usa el total de cada comanda).
+                const precio = precioVigente(detalle.producto.precios, comanda.fecha);
 
-                if (!precioVigente) {
+                if (precio === null) {
                     itemsSinPrecioHistorico += detalle.cantidad;
                     continue;
                 }
 
-                ventasDelDia += Number(precioVigente.precio) * detalle.cantidad;
+                ventasDelDia += precio * detalle.cantidad;
             }
         }
 

@@ -15,7 +15,8 @@ export class CocinaController {
 
     async actualizarEstado(req: Request, res: Response) {
         try {
-            return res.status(200).json(await service.actualizarEstado(req.body));
+            // req.usuario lo completa el middleware verificarToken con los datos del token
+            return res.status(200).json(await service.actualizarEstado(req.body, req.usuario!.id));
         } catch (error) {
             return this.sendError(res, error);
         }

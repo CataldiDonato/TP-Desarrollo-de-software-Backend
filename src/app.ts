@@ -1,8 +1,7 @@
-import express, { Application, Request, Response } from 'express';
+import express, { Application, NextFunction, Request, Response } from 'express';
 import cors from 'cors';
 
 // 1. Importaciones de rutas de cada integrante
-// (Descomenta cada una a medida que las vayan creando)
 import categoriasRoutes from './routes/categorias.routes';
 import productosRoutes from './routes/productos.routes';
 import precioProducto from './routes/precio_producto.routes';
@@ -34,7 +33,7 @@ app.get('/', (req: Request, res: Response) => {
 });
 
 // 4. Registro de endpoints de la API
-// (Descomenta la línea cuando la ruta correspondiente esté lista)
+// Login es la única ruta pública: todas las que están debajo de verificarToken piden un token válido.
 app.use('/api/auth', authRoutes);
 app.use(verificarToken);
 
@@ -53,9 +52,18 @@ app.use('/api/medios-pago', mediosPagoRoutes);
 // 5. Captura de rutas no existentes (Reemplaza el texto "Cannot GET")
 app.use((req: Request, res: Response) => {
   res.status(404).json({
-    error: 'Ruta no encontrada',
-    mensaje: `La ruta '${req.originalUrl}' no existe en este servidor.`
+    message: `La ruta '${req.originalUrl}' no existe en este servidor.`
   });
+});
+
+// 6. Manejo de errores no controlados (por ejemplo, un JSON mal escrito en el body).
+// Express reconoce que es un manejador de errores porque recibe 4 parámetros.
+app.use((error: any, req: Request, res: Response, _next: NextFunction) => {
+  if (error.type === 'entity.parse.failed') {
+    return res.status(400).json({ message: 'El cuerpo de la solicitud no es un JSON válido.' });
+  }
+  console.error(error);
+  return res.status(500).json({ message: 'Ocurrió un error interno al procesar la solicitud.' });
 });
 
 export default app;

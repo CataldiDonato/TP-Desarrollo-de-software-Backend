@@ -1,8 +1,6 @@
 // This is your Prisma schema file,
 // learn more about it in the docs: https://pris.ly/d/prisma-schema
 
-// Get a free hosted Postgres database in seconds: `npx create-db`
-  
 generator client {
   provider = "prisma-client"
   output   = "../src/generated"
@@ -11,14 +9,6 @@ generator client {
 datasource db {
   provider = "postgresql"
 }
-
-//  model Plato {
-//    id          Int      @id @default(autoincrement())
-//    nombre      String   @unique
-//    descripcion String?  // Campo opcional
-//    precio      Decimal
-//    creadoEn    DateTime @default(now())
-//  }
 
 // Migrar cambios a la db por primera vez 
 // npx prisma migrate dev --name init
@@ -104,7 +94,7 @@ enum estado_mesa {
 model comanda {
   id Int @id @default(autoincrement())
   fecha DateTime
-  estado estado_comanda @default(Abierta) // <-- AGREGA ESTA LÍNEA
+  estado estado_comanda @default(Abierta)
 
   // Relacion con mesa
   id_mesa Int

@@ -1,11 +1,14 @@
 {
   "name": "tp-desarrollo-de-software-backend",
   "version": "1.0.0",
-  "description": "",
-  "main": "index.js",
+  "description": "Backend de RestoFlow: API REST para la gestión de un restaurante.",
+  "main": "index.ts",
   "scripts": {
     "dev": "tsx watch index.ts",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "start": "tsx index.ts",
+    "seed": "tsx seed.ts",
+    "test": "tsx --test tests/*.test.ts",
+    "typecheck": "tsc --noEmit"
   },
   "repository": {
     "type": "git",

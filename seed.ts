@@ -1,54 +1,83 @@
-import prisma from './src/config/db.ts';
-import { hashPassword } from './src/utils/password.ts';
+import prisma from './src/config/db';
+import { hashPassword } from './src/utils/password';
+
+// Carga datos iniciales para poder probar el sistema.
+// Se puede correr varias veces: solo crea lo que todavía no existe.
+// Uso: npm run seed
 
 async function main() {
   console.log('Iniciando carga de datos iniciales...');
-  const contraseniaMozo = await hashPassword('1234');
 
-  // 1. Crear un Mozo (Usuario) si no existe
-  const passwordHasheada = await hashPassword('1234');
-  
-  const mozo = await prisma.usuario.upsert({
-    where: { id: 1 },
-    update: {
-      contrasenia: contraseniaMozo
-    },
-    create: {
-      id: 1,
-      nombre: 'Tomas (Mozo de Prueba)',
-      email: 'tomas@mozo.com',
-      contrasenia: '1234',
-      rol: 'Mozo'
+  // 1. Un usuario por cada rol. Si el email ya existe, no se toca.
+  const usuarios = [
+    { nombre: 'Admin', email: 'admin@restoflow.com', contrasenia: 'admin1234', rol: 'Administrador' as const },
+    { nombre: 'Mozo', email: 'mozo@restoflow.com', contrasenia: 'mozo1234', rol: 'Mozo' as const },
+    { nombre: 'Cocinero', email: 'cocinero@restoflow.com', contrasenia: 'cocinero1234', rol: 'Cocinero' as const }
+  ];
+
+  for (const usuario of usuarios) {
+    await prisma.usuario.upsert({
+      where: { email: usuario.email },
+      update: {},
+      create: {
+        nombre: usuario.nombre,
+        email: usuario.email,
+        contrasenia: await hashPassword(usuario.contrasenia),
+        rol: usuario.rol
+      }
+    });
+  }
+  console.log('Usuarios listos.');
+
+  // 2. Mesas: solo si no hay ninguna cargada.
+  const cantidadMesas = await prisma.mesa.count();
+  if (cantidadMesas === 0) {
+    const capacidades = [2, 2, 4, 4, 6];
+    for (const capacidad of capacidades) {
+      await prisma.mesa.create({ data: { capacidad } });
     }
-  });
-  console.log('Mozo creado:', mozo);
-
-  // 2. Crear un par de Mesas
-  for (let i = 1; i <= 5; i++) {
-    await prisma.mesa.upsert({
-      where: { id: i },
-      update: {},
-      create: {
-        id: i,
-        capacidad: 4
-      }
-    });
   }
-  console.log('5 Mesas creadas.');
+  console.log('Mesas listas.');
 
-  // 3. Crear medios de pago básicos
-  const mediosPago = ['Efectivo', 'Transferencia', 'Tarjeta'];
-  for (let i = 0; i < mediosPago.length; i++) {
-    await prisma.medio_de_pago.upsert({
-      where: { id: i + 1 },
-      update: {},
-      create: {
-        id: i + 1,
-        tipo: mediosPago[i] as any
-      }
-    });
+  // 3. Medios de pago: uno por cada tipo.
+  const tipos = ['Efectivo', 'Transferencia', 'Tarjeta'] as const;
+  for (const tipo of tipos) {
+    const existe = await prisma.medio_de_pago.findFirst({ where: { tipo } });
+    if (!existe) {
+      await prisma.medio_de_pago.create({ data: { tipo } });
+    }
   }
-  console.log('Medios de pago creados.');
+  console.log('Medios de pago listos.');
+
+  // 4. Categorías y algunos productos de ejemplo: solo si no hay productos cargados.
+  const cantidadProductos = await prisma.producto.count();
+  if (cantidadProductos === 0) {
+    // Si la categoría ya existe se reutiliza, si no se crea.
+    const principales = await prisma.categoria.findFirst({ where: { nombre: 'Platos principales' } })
+      ?? await prisma.categoria.create({ data: { nombre: 'Platos principales' } });
+    const bebidas = await prisma.categoria.findFirst({ where: { nombre: 'Bebidas' } })
+      ?? await prisma.categoria.create({ data: { nombre: 'Bebidas' } });
+
+    const productos = [
+      { nombre: 'Milanesa con papas', descripcion: 'Milanesa de ternera con papas fritas', tipo: 'Plato' as const, id_categoria: principales.id, precio: 12000 },
+      { nombre: 'Hamburguesa completa', descripcion: 'Con lechuga, tomate, queso y huevo', tipo: 'Plato' as const, id_categoria: principales.id, precio: 9500 },
+      { nombre: 'Gaseosa 500ml', descripcion: '', tipo: 'Bebida' as const, id_categoria: bebidas.id, precio: 2500 },
+      { nombre: 'Agua sin gas', descripcion: '', tipo: 'Bebida' as const, id_categoria: bebidas.id, precio: 2000 }
+    ];
+
+    for (const producto of productos) {
+      await prisma.producto.create({
+        data: {
+          nombre: producto.nombre,
+          descripcion: producto.descripcion,
+          tipo: producto.tipo,
+          id_categoria: producto.id_categoria,
+          precios: { create: { precio: producto.precio } }
+        }
+      });
+    }
+  }
+  console.log('Productos listos.');
 
   console.log('Carga inicial finalizada con éxito.');
 }
