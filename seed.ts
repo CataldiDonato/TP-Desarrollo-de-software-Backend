@@ -3,18 +3,21 @@ import { hashPassword } from './src/utils/password.ts';
 
 async function main() {
   console.log('Iniciando carga de datos iniciales...');
+  const contraseniaMozo = await hashPassword('1234');
 
   // 1. Crear un Mozo (Usuario) si no existe
   const passwordHasheada = await hashPassword('1234');
   
   const mozo = await prisma.usuario.upsert({
     where: { id: 1 },
-    update: {},
+    update: {
+      contrasenia: contraseniaMozo
+    },
     create: {
       id: 1,
       nombre: 'Tomas (Mozo de Prueba)',
       email: 'tomas@mozo.com',
-      contrasenia: passwordHasheada,
+      contrasenia: '1234',
       rol: 'Mozo'
     }
   });
