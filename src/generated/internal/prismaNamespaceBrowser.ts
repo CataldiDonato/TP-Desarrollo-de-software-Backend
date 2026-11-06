@@ -52,6 +52,7 @@ export const AnyNull = runtime.AnyNull
 
 export const ModelName = {
   usuario: 'usuario',
+  pago_mercadopago: 'pago_mercadopago',
   medio_de_pago: 'medio_de_pago',
   reserva: 'reserva',
   mesa: 'mesa',
@@ -87,6 +88,19 @@ export const UsuarioScalarFieldEnum = {
 } as const
 
 export type UsuarioScalarFieldEnum = (typeof UsuarioScalarFieldEnum)[keyof typeof UsuarioScalarFieldEnum]
+
+
+export const Pago_mercadopagoScalarFieldEnum = {
+  id: 'id',
+  id_comanda: 'id_comanda',
+  preference_id: 'preference_id',
+  payment_id: 'payment_id',
+  estado: 'estado',
+  monto: 'monto',
+  creado_en: 'creado_en'
+} as const
+
+export type Pago_mercadopagoScalarFieldEnum = (typeof Pago_mercadopagoScalarFieldEnum)[keyof typeof Pago_mercadopagoScalarFieldEnum]
 
 
 export const Medio_de_pagoScalarFieldEnum = {

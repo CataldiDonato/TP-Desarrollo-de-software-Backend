@@ -21,7 +21,8 @@ export type rol_usuario = (typeof rol_usuario)[keyof typeof rol_usuario]
 export const tipo_pago = {
   Efectivo: 'Efectivo',
   Transferencia: 'Transferencia',
-  Tarjeta: 'Tarjeta'
+  Tarjeta: 'Tarjeta',
+  MercadoPago: 'MercadoPago'
 } as const
 
 export type tipo_pago = (typeof tipo_pago)[keyof typeof tipo_pago]

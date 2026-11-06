@@ -9,6 +9,7 @@
  * 🟢 You can import this file directly.
  */
 export type * from './models/usuario'
+export type * from './models/pago_mercadopago'
 export type * from './models/medio_de_pago'
 export type * from './models/reserva'
 export type * from './models/mesa'

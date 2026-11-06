@@ -108,6 +108,10 @@ export class comandaService {
             if (!medio) {
                 throw new AppError(`No existe un medio de pago con el id ${id_medio_pago}.`, 404);
             }
+            // Mercado Pago solo lo puede marcar el webhook, cuando MP confirma el pago.
+            if (medio.tipo === 'MercadoPago') {
+                throw new AppError('Los pagos con Mercado Pago se cobran con el QR, no a mano.');
+            }
         }
 
         return await repository.cerrar(id, comanda.id_mesa, estado, id_medio_pago);

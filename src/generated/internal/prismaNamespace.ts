@@ -398,6 +398,7 @@ type FieldRefInputType<Model, FieldType> = Model extends never ? never : FieldRe
 
 export const ModelName = {
   usuario: 'usuario',
+  pago_mercadopago: 'pago_mercadopago',
   medio_de_pago: 'medio_de_pago',
   reserva: 'reserva',
   mesa: 'mesa',
@@ -421,7 +422,7 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
     omit: GlobalOmitOptions
   }
   meta: {
-    modelProps: "usuario" | "medio_de_pago" | "reserva" | "mesa" | "comanda" | "producto" | "categoria" | "precio_producto" | "detalle_comanda"
+    modelProps: "usuario" | "pago_mercadopago" | "medio_de_pago" | "reserva" | "mesa" | "comanda" | "producto" | "categoria" | "precio_producto" | "detalle_comanda"
     txIsolationLevel: TransactionIsolationLevel
   }
   model: {
@@ -496,6 +497,80 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
         count: {
           args: Prisma.usuarioCountArgs<ExtArgs>
           result: runtime.Types.Utils.Optional<Prisma.UsuarioCountAggregateOutputType> | number
+        }
+      }
+    }
+    pago_mercadopago: {
+      payload: Prisma.$pago_mercadopagoPayload<ExtArgs>
+      fields: Prisma.pago_mercadopagoFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.pago_mercadopagoFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$pago_mercadopagoPayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.pago_mercadopagoFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$pago_mercadopagoPayload>
+        }
+        findFirst: {
+          args: Prisma.pago_mercadopagoFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$pago_mercadopagoPayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.pago_mercadopagoFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$pago_mercadopagoPayload>
+        }
+        findMany: {
+          args: Prisma.pago_mercadopagoFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$pago_mercadopagoPayload>[]
+        }
+        create: {
+          args: Prisma.pago_mercadopagoCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$pago_mercadopagoPayload>
+        }
+        createMany: {
+          args: Prisma.pago_mercadopagoCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        createManyAndReturn: {
+          args: Prisma.pago_mercadopagoCreateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$pago_mercadopagoPayload>[]
+        }
+        delete: {
+          args: Prisma.pago_mercadopagoDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$pago_mercadopagoPayload>
+        }
+        update: {
+          args: Prisma.pago_mercadopagoUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$pago_mercadopagoPayload>
+        }
+        deleteMany: {
+          args: Prisma.pago_mercadopagoDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.pago_mercadopagoUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateManyAndReturn: {
+          args: Prisma.pago_mercadopagoUpdateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$pago_mercadopagoPayload>[]
+        }
+        upsert: {
+          args: Prisma.pago_mercadopagoUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$pago_mercadopagoPayload>
+        }
+        aggregate: {
+          args: Prisma.Pago_mercadopagoAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregatePago_mercadopago>
+        }
+        groupBy: {
+          args: Prisma.pago_mercadopagoGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.Pago_mercadopagoGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.pago_mercadopagoCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.Pago_mercadopagoCountAggregateOutputType> | number
         }
       }
     }
@@ -1141,6 +1216,19 @@ export const UsuarioScalarFieldEnum = {
 export type UsuarioScalarFieldEnum = (typeof UsuarioScalarFieldEnum)[keyof typeof UsuarioScalarFieldEnum]
 
 
+export const Pago_mercadopagoScalarFieldEnum = {
+  id: 'id',
+  id_comanda: 'id_comanda',
+  preference_id: 'preference_id',
+  payment_id: 'payment_id',
+  estado: 'estado',
+  monto: 'monto',
+  creado_en: 'creado_en'
+} as const
+
+export type Pago_mercadopagoScalarFieldEnum = (typeof Pago_mercadopagoScalarFieldEnum)[keyof typeof Pago_mercadopagoScalarFieldEnum]
+
+
 export const Medio_de_pagoScalarFieldEnum = {
   id: 'id',
   tipo: 'tipo'
@@ -1297,16 +1385,16 @@ export type ListEnumrol_usuarioFieldRefInput<$PrismaModel> = FieldRefInputType<$
 
 
 /**
- * Reference to a field of type 'tipo_pago'
+ * Reference to a field of type 'Decimal'
  */
-export type Enumtipo_pagoFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'tipo_pago'>
+export type DecimalFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Decimal'>
     
 
 
 /**
- * Reference to a field of type 'tipo_pago[]'
+ * Reference to a field of type 'Decimal[]'
  */
-export type ListEnumtipo_pagoFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'tipo_pago[]'>
+export type ListDecimalFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Decimal[]'>
     
 
 
@@ -1321,6 +1409,20 @@ export type DateTimeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel
  * Reference to a field of type 'DateTime[]'
  */
 export type ListDateTimeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'DateTime[]'>
+    
+
+
+/**
+ * Reference to a field of type 'tipo_pago'
+ */
+export type Enumtipo_pagoFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'tipo_pago'>
+    
+
+
+/**
+ * Reference to a field of type 'tipo_pago[]'
+ */
+export type ListEnumtipo_pagoFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'tipo_pago[]'>
     
 
 
@@ -1377,20 +1479,6 @@ export type Enumtipo_productoFieldRefInput<$PrismaModel> = FieldRefInputType<$Pr
  * Reference to a field of type 'tipo_producto[]'
  */
 export type ListEnumtipo_productoFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'tipo_producto[]'>
-    
-
-
-/**
- * Reference to a field of type 'Decimal'
- */
-export type DecimalFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Decimal'>
-    
-
-
-/**
- * Reference to a field of type 'Decimal[]'
- */
-export type ListDecimalFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Decimal[]'>
     
 
 
@@ -1573,6 +1661,7 @@ export interface PrismaClientOptionsWithAdapter extends PrismaClientBaseOptions 
 export type PrismaClientOptions = PrismaClientOptionsWithAccelerateUrl | PrismaClientOptionsWithAdapter
 export type GlobalOmitConfig = {
   usuario?: Prisma.usuarioOmit
+  pago_mercadopago?: Prisma.pago_mercadopagoOmit
   medio_de_pago?: Prisma.medio_de_pagoOmit
   reserva?: Prisma.reservaOmit
   mesa?: Prisma.mesaOmit

@@ -1,6 +1,7 @@
 import express, { Application, NextFunction, Request, Response } from 'express';
 import cors from 'cors';
 
+
 // 1. Importaciones de rutas de cada integrante
 import categoriasRoutes from './routes/categorias.routes';
 import productosRoutes from './routes/productos.routes';
@@ -14,7 +15,9 @@ import cocinaRoutes from './routes/cocina.routes';
 import dashboardRoutes from './routes/dashboard.routes';
 import mediosPagoRoutes from './routes/medio_pago.routes';
 import authRoutes from './routes/auth.routes';
+import webhookRoutes from './routes/webhook.routes';
 import { verificarToken } from './middlewares/auth.middleware';
+
 
 const app: Application = express();
 
@@ -34,6 +37,7 @@ app.get('/', (req: Request, res: Response) => {
 
 // 4. Registro de endpoints de la API
 app.use('/api/auth', authRoutes);
+app.use('/api/webhooks', webhookRoutes);   // ← acá
 app.use(verificarToken);
 
 app.use('/api/categorias', categoriasRoutes);

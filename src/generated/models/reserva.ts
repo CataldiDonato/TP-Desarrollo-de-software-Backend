@@ -436,16 +436,8 @@ export type reservaOrderByRelationAggregateInput = {
   _count?: Prisma.SortOrder
 }
 
-export type DateTimeFieldUpdateOperationsInput = {
-  set?: Date | string
-}
-
 export type Enumestado_reservaFieldUpdateOperationsInput = {
   set?: $Enums.estado_reserva
-}
-
-export type NullableStringFieldUpdateOperationsInput = {
-  set?: string | null
 }
 
 export type reservaCreateNestedManyWithoutMesaInput = {
