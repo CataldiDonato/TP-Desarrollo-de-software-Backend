@@ -1,6 +1,6 @@
 # RestoFlow — Backend
 
-API REST para la gestión interna de un restaurante: mesas, reservas, comandas, cocina y cobro.
+API REST para la gestión interna de un restaurante: mesas, reservas, comandas, cocina y cobro (incluye cobro con Mercado Pago por QR).
 
 **Tecnologías:** Node.js · TypeScript (modo `strict`) · Express 5 · Prisma 7 · PostgreSQL · JWT
 
@@ -41,6 +41,12 @@ El servidor queda en `http://localhost:3000`. Si abrís esa dirección tiene que
 | `JWT_SECRET` | Clave para firmar los tokens de login | un texto largo y secreto |
 | `PORT` | Puerto del servidor (opcional) | `3000` |
 | `CORS_ORIGIN` | Dominios que pueden usar la API, separados por coma (opcional; en producción va la URL del frontend) | `https://restoflow.vercel.app` |
+| `MP_ACCESS_TOKEN` | Access Token de Mercado Pago (no la Public Key) | `APP_USR-...` |
+| `MP_WEBHOOK_SECRET` | Clave secreta del webhook de Mercado Pago | texto que da el panel de MP |
+| `PUBLIC_API_URL` | URL pública del backend, a donde MP manda el webhook | `https://mi-backend.vercel.app` |
+| `FRONTEND_URL` | URL del frontend, a donde MP devuelve al cliente | `https://mi-frontend.vercel.app` |
+
+> En Vercel cada valor va solo, sin comillas ni comentarios. Configuración completa de Mercado Pago: [docs/MERCADOPAGO.md](docs/MERCADOPAGO.md).
 
 ## Usuarios de prueba (los crea `npm run seed`)
 
@@ -91,3 +97,9 @@ Ruta (routes/)  →  Controlador (controllers/)  →  Servicio (services/)  → 
 Todos los errores se responden con el mismo formato: `{ "message": "texto del error" }`.
 
 La documentación de todos los endpoints está en [docs/API.md](docs/API.md).
+
+## Cobro con Mercado Pago
+
+El mozo genera un QR con el link de pago (Checkout Pro), el cliente paga desde el celular y la comanda se
+cierra sola cuando llega el webhook de MP. Configuración, cuentas de prueba, cómo probar y problemas
+conocidos: [docs/MERCADOPAGO.md](docs/MERCADOPAGO.md).
