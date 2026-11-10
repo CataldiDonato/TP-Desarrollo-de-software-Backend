@@ -19,8 +19,8 @@ export class MesaController {
     // GET /mesas/disponibles?fecha=...&personas=... → los dos parámetros son opcionales
     async getMesasDisponibles(req: Request, res: Response) {
         try {
-            const { fecha, personas } = req.query;
-            return res.status(200).json(await service.getDisponibles(fecha, personas));
+            const { fecha, personas, excluirReserva } = req.query;
+            return res.status(200).json(await service.getDisponibles(fecha, personas, excluirReserva));
         } catch (error) {
             return this.sendError(res, error);
         }

@@ -39,13 +39,14 @@ export class MesaRepository {
     }
 
     // Mesas con lugar suficiente y sin reservas confirmadas entre "desde" y "hasta".
-    async findDisponibles(personas: number, desde: Date, hasta: Date) {
+    async findDisponibles(personas: number, desde: Date, hasta: Date, excluirId?: number) {
         return await prisma.mesa.findMany({
             where: {
                 capacidad: { gte: personas },
                 reservas: {
                     none: {
                         estado: 'Confirmada',
+                        id: excluirId ? { not: excluirId } : undefined,
                         fecha: { gt: desde, lt: hasta }
                     }
                 }

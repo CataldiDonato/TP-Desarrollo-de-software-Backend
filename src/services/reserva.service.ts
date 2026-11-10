@@ -2,10 +2,10 @@ import { ReservaRepository } from '../repositories/reserva.repository';
 import { MesaRepository } from '../repositories/mesa.repository';
 import { rangoDeReserva } from './mesa.service';
 import { AppError } from '../utils/app-error';
+import { parseInstanteReserva, rangoDiaReserva } from '../utils/fecha-reserva';
 import {
     ESTADOS_RESERVA,
     isPlainObject,
-    parseFecha,
     parseOpcion,
     parsePositiveId,
     parsePositiveInt,
@@ -42,11 +42,8 @@ export class ReservaService {
 
         let desde: Date | undefined;
         let hasta: Date | undefined;
-        if (typeof fecha === 'string' && fecha !== '') {
-            // "2026-10-10T00:00" se interpreta en la hora local del servidor
-            desde = parseFecha(`${fecha}T00:00`, 'fecha');
-            hasta = new Date(desde);
-            hasta.setDate(hasta.getDate() + 1);
+        if (fecha !== undefined && fecha !== '') {
+            ({ desde, hasta } = rangoDiaReserva(fecha));
         }
 
         return await repository_reserva.findAll(textoCliente, desde, hasta);
@@ -58,7 +55,7 @@ export class ReservaService {
         }
 
         const datos: CreateReserva = {
-            fecha: parseFecha(input.fecha, 'fecha'),
+            fecha: parseInstanteReserva(input.fecha),
             cantidad_personas: parsePositiveInt(input.cantidad_personas, 'cantidad_personas'),
             id_mesa: parsePositiveId(input.id_mesa, 'id_mesa'),
             nombre_cliente: requireText(input.nombre_cliente, 'nombre_cliente'),
@@ -87,7 +84,7 @@ export class ReservaService {
 
         // Solo se validan y actualizan los campos que vienen en el body.
         const datos: UpdateReserva = {};
-        if (input.fecha !== undefined) datos.fecha = parseFecha(input.fecha, 'fecha');
+        if (input.fecha !== undefined) datos.fecha = parseInstanteReserva(input.fecha);
         if (input.cantidad_personas !== undefined) datos.cantidad_personas = parsePositiveInt(input.cantidad_personas, 'cantidad_personas');
         if (input.id_mesa !== undefined) datos.id_mesa = parsePositiveId(input.id_mesa, 'id_mesa');
         if (input.nombre_cliente !== undefined) datos.nombre_cliente = requireText(input.nombre_cliente, 'nombre_cliente');

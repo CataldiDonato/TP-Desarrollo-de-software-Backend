@@ -1,11 +1,12 @@
 import { MesaRepository } from '../repositories/mesa.repository';
 import { AppError } from '../utils/app-error';
+import { parseInstanteReserva } from '../utils/fecha-reserva';
 import {
     ESTADOS_MESA,
     isPlainObject,
-    parseFecha,
     parseOpcion,
-    parsePositiveInt
+    parsePositiveInt,
+    parsePositiveId
 } from '../utils/validation';
 
 // Cuánto dura una reserva. Se usa para saber si dos reservas de la misma mesa se pisan.
@@ -40,16 +41,17 @@ export class MesaService {
 
     // Sin parámetros: mesas libres en este momento (para abrir una comanda).
     // Con fecha y personas: mesas sin reservas en ese horario y con lugar suficiente (para reservar).
-    async getDisponibles(fecha?: unknown, personas?: unknown) {
-        if (fecha === undefined && personas === undefined) {
+    async getDisponibles(fecha?: unknown, personas?: unknown, excluirReserva?: unknown) {
+        if (fecha === undefined && personas === undefined && excluirReserva === undefined) {
             return await repository_mesa.findAll('Libre');
         }
 
-        const fechaReserva = parseFecha(fecha, 'fecha');
+        const fechaReserva = parseInstanteReserva(fecha);
         const cantidad = parsePositiveInt(personas, 'personas');
+        const excluirId = excluirReserva === undefined ? undefined : parsePositiveId(excluirReserva, 'excluirReserva');
         const { desde, hasta } = rangoDeReserva(fechaReserva);
 
-        return await repository_mesa.findDisponibles(cantidad, desde, hasta);
+        return await repository_mesa.findDisponibles(cantidad, desde, hasta, excluirId);
     }
 
     async create(input: unknown) {
