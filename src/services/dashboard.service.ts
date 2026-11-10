@@ -1,16 +1,17 @@
+import { DateTime } from 'luxon';
 import { DashboardRepository } from '../repositories/dashboard.repository';
 import { precioVigente } from '../utils/precios';
+import { ZONA_RESTAURANTE } from '../utils/fecha-reserva';
 
 const repository = new DashboardRepository();
 
 export class DashboardService {
     async getStats() {
         const now = new Date();
-        const inicioDelDia = new Date(now);
-        inicioDelDia.setHours(0, 0, 0, 0);
-
-        const finDelDia = new Date(inicioDelDia);
-        finDelDia.setDate(finDelDia.getDate() + 1);
+        // "Hoy" es el día de Argentina, no el del servidor (en Vercel el servidor está en UTC).
+        const hoy = DateTime.fromJSDate(now).setZone(ZONA_RESTAURANTE).startOf('day');
+        const inicioDelDia = hoy.toJSDate();
+        const finDelDia = hoy.plus({ days: 1 }).toJSDate();
 
         const [mesasOcupadas, pedidosEnCocina, comandasPagadas, proximasReservas] = await repository.getMetricas(
             inicioDelDia,

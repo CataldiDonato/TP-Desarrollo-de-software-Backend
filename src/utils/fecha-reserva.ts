@@ -1,7 +1,7 @@
 import { DateTime } from 'luxon';
 import { AppError } from './app-error';
 
-const ZONA_RESTAURANTE = 'America/Argentina/Buenos_Aires';
+export const ZONA_RESTAURANTE = 'America/Argentina/Buenos_Aires';
 
 // El contrato de reservas recibe instantes explícitos, nunca fechas locales ambiguas.
 export function parseInstanteReserva(value: unknown): Date {
