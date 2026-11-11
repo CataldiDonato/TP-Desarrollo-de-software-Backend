@@ -1,0 +1,49 @@
+{
+  "name": "tp-desarrollo-de-software-backend",
+  "version": "1.0.0",
+  "description": "Backend de RestoFlow: API REST para la gestión de un restaurante.",
+  "main": "index.ts",
+  "scripts": {
+    "dev": "tsx watch index.ts",
+    "start": "tsx index.ts",
+    "seed": "tsx seed.ts",
+    "test": "tsx --test tests/*.test.ts",
+    "typecheck": "tsc --noEmit",
+    "db:deploy": "prisma migrate deploy",
+    "postinstall": "prisma generate"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/CataldiDonato/TP-Desarrollo-de-software-Backend.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs",
+  "bugs": {
+    "url": "https://github.com/CataldiDonato/TP-Desarrollo-de-software-Backend/issues"
+  },
+  "homepage": "https://github.com/CataldiDonato/TP-Desarrollo-de-software-Backend#readme",
+  "dependencies": {
+    "@prisma/adapter-pg": "^7.9.1",
+    "@prisma/client": "^7.9.1",
+    "cors": "^2.8.6",
+    "dotenv": "^17.4.2",
+    "express": "^5.2.1",
+    "jsonwebtoken": "^9.0.3",
+    "luxon": "^3.7.2",
+    "mercadopago": "^3.6.1",
+    "pg": "^8.22.0",
+    "prisma": "^7.9.1",
+    "tsx": "^4.23.5"
+  },
+  "devDependencies": {
+    "@types/cors": "^2.8.19",
+    "@types/express": "^5.0.6",
+    "@types/jsonwebtoken": "^9.0.10",
+    "@types/luxon": "^3.7.6",
+    "@types/node": "^26.1.2",
+    "@types/pg": "^8.20.4",
+    "typescript": "^7.0.2"
+  }
+}
