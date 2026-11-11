@@ -40,7 +40,7 @@ async function main() {
   console.log('Mesas listas.');
 
   // 3. Medios de pago: uno por cada tipo.
-  const tipos = ['Efectivo', 'Transferencia', 'Tarjeta'] as const;
+  const tipos = ['Efectivo', 'Transferencia', 'Tarjeta', 'MercadoPago'] as const;
   for (const tipo of tipos) {
     const existe = await prisma.medio_de_pago.findFirst({ where: { tipo } });
     if (!existe) {

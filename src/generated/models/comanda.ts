@@ -240,6 +240,7 @@ export type comandaWhereInput = {
   mozo?: Prisma.XOR<Prisma.UsuarioScalarRelationFilter, Prisma.usuarioWhereInput>
   medio_pago?: Prisma.XOR<Prisma.Medio_de_pagoNullableScalarRelationFilter, Prisma.medio_de_pagoWhereInput> | null
   detalles_comandas?: Prisma.Detalle_comandaListRelationFilter
+  pagos_mp?: Prisma.Pago_mercadopagoListRelationFilter
 }
 
 export type comandaOrderByWithRelationInput = {
@@ -253,6 +254,7 @@ export type comandaOrderByWithRelationInput = {
   mozo?: Prisma.usuarioOrderByWithRelationInput
   medio_pago?: Prisma.medio_de_pagoOrderByWithRelationInput
   detalles_comandas?: Prisma.detalle_comandaOrderByRelationAggregateInput
+  pagos_mp?: Prisma.pago_mercadopagoOrderByRelationAggregateInput
 }
 
 export type comandaWhereUniqueInput = Prisma.AtLeast<{
@@ -269,6 +271,7 @@ export type comandaWhereUniqueInput = Prisma.AtLeast<{
   mozo?: Prisma.XOR<Prisma.UsuarioScalarRelationFilter, Prisma.usuarioWhereInput>
   medio_pago?: Prisma.XOR<Prisma.Medio_de_pagoNullableScalarRelationFilter, Prisma.medio_de_pagoWhereInput> | null
   detalles_comandas?: Prisma.Detalle_comandaListRelationFilter
+  pagos_mp?: Prisma.Pago_mercadopagoListRelationFilter
 }, "id">
 
 export type comandaOrderByWithAggregationInput = {
@@ -304,6 +307,7 @@ export type comandaCreateInput = {
   mozo: Prisma.usuarioCreateNestedOneWithoutComandasInput
   medio_pago?: Prisma.medio_de_pagoCreateNestedOneWithoutComandasInput
   detalles_comandas?: Prisma.detalle_comandaCreateNestedManyWithoutComandaInput
+  pagos_mp?: Prisma.pago_mercadopagoCreateNestedManyWithoutComandaInput
 }
 
 export type comandaUncheckedCreateInput = {
@@ -314,6 +318,7 @@ export type comandaUncheckedCreateInput = {
   id_mozo: number
   id_medio_pago?: number | null
   detalles_comandas?: Prisma.detalle_comandaUncheckedCreateNestedManyWithoutComandaInput
+  pagos_mp?: Prisma.pago_mercadopagoUncheckedCreateNestedManyWithoutComandaInput
 }
 
 export type comandaUpdateInput = {
@@ -323,6 +328,7 @@ export type comandaUpdateInput = {
   mozo?: Prisma.usuarioUpdateOneRequiredWithoutComandasNestedInput
   medio_pago?: Prisma.medio_de_pagoUpdateOneWithoutComandasNestedInput
   detalles_comandas?: Prisma.detalle_comandaUpdateManyWithoutComandaNestedInput
+  pagos_mp?: Prisma.pago_mercadopagoUpdateManyWithoutComandaNestedInput
 }
 
 export type comandaUncheckedUpdateInput = {
@@ -333,6 +339,7 @@ export type comandaUncheckedUpdateInput = {
   id_mozo?: Prisma.IntFieldUpdateOperationsInput | number
   id_medio_pago?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   detalles_comandas?: Prisma.detalle_comandaUncheckedUpdateManyWithoutComandaNestedInput
+  pagos_mp?: Prisma.pago_mercadopagoUncheckedUpdateManyWithoutComandaNestedInput
 }
 
 export type comandaCreateManyInput = {
@@ -366,6 +373,11 @@ export type ComandaListRelationFilter = {
 
 export type comandaOrderByRelationAggregateInput = {
   _count?: Prisma.SortOrder
+}
+
+export type ComandaScalarRelationFilter = {
+  is?: Prisma.comandaWhereInput
+  isNot?: Prisma.comandaWhereInput
 }
 
 export type comandaCountOrderByAggregateInput = {
@@ -409,11 +421,6 @@ export type comandaSumOrderByAggregateInput = {
   id_medio_pago?: Prisma.SortOrder
 }
 
-export type ComandaScalarRelationFilter = {
-  is?: Prisma.comandaWhereInput
-  isNot?: Prisma.comandaWhereInput
-}
-
 export type comandaCreateNestedManyWithoutMozoInput = {
   create?: Prisma.XOR<Prisma.comandaCreateWithoutMozoInput, Prisma.comandaUncheckedCreateWithoutMozoInput> | Prisma.comandaCreateWithoutMozoInput[] | Prisma.comandaUncheckedCreateWithoutMozoInput[]
   connectOrCreate?: Prisma.comandaCreateOrConnectWithoutMozoInput | Prisma.comandaCreateOrConnectWithoutMozoInput[]
@@ -454,6 +461,20 @@ export type comandaUncheckedUpdateManyWithoutMozoNestedInput = {
   update?: Prisma.comandaUpdateWithWhereUniqueWithoutMozoInput | Prisma.comandaUpdateWithWhereUniqueWithoutMozoInput[]
   updateMany?: Prisma.comandaUpdateManyWithWhereWithoutMozoInput | Prisma.comandaUpdateManyWithWhereWithoutMozoInput[]
   deleteMany?: Prisma.comandaScalarWhereInput | Prisma.comandaScalarWhereInput[]
+}
+
+export type comandaCreateNestedOneWithoutPagos_mpInput = {
+  create?: Prisma.XOR<Prisma.comandaCreateWithoutPagos_mpInput, Prisma.comandaUncheckedCreateWithoutPagos_mpInput>
+  connectOrCreate?: Prisma.comandaCreateOrConnectWithoutPagos_mpInput
+  connect?: Prisma.comandaWhereUniqueInput
+}
+
+export type comandaUpdateOneRequiredWithoutPagos_mpNestedInput = {
+  create?: Prisma.XOR<Prisma.comandaCreateWithoutPagos_mpInput, Prisma.comandaUncheckedCreateWithoutPagos_mpInput>
+  connectOrCreate?: Prisma.comandaCreateOrConnectWithoutPagos_mpInput
+  upsert?: Prisma.comandaUpsertWithoutPagos_mpInput
+  connect?: Prisma.comandaWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.comandaUpdateToOneWithWhereWithoutPagos_mpInput, Prisma.comandaUpdateWithoutPagos_mpInput>, Prisma.comandaUncheckedUpdateWithoutPagos_mpInput>
 }
 
 export type comandaCreateNestedManyWithoutMedio_pagoInput = {
@@ -572,6 +593,7 @@ export type comandaCreateWithoutMozoInput = {
   mesa: Prisma.mesaCreateNestedOneWithoutComandasInput
   medio_pago?: Prisma.medio_de_pagoCreateNestedOneWithoutComandasInput
   detalles_comandas?: Prisma.detalle_comandaCreateNestedManyWithoutComandaInput
+  pagos_mp?: Prisma.pago_mercadopagoCreateNestedManyWithoutComandaInput
 }
 
 export type comandaUncheckedCreateWithoutMozoInput = {
@@ -581,6 +603,7 @@ export type comandaUncheckedCreateWithoutMozoInput = {
   id_mesa: number
   id_medio_pago?: number | null
   detalles_comandas?: Prisma.detalle_comandaUncheckedCreateNestedManyWithoutComandaInput
+  pagos_mp?: Prisma.pago_mercadopagoUncheckedCreateNestedManyWithoutComandaInput
 }
 
 export type comandaCreateOrConnectWithoutMozoInput = {
@@ -621,12 +644,67 @@ export type comandaScalarWhereInput = {
   id_medio_pago?: Prisma.IntNullableFilter<"comanda"> | number | null
 }
 
+export type comandaCreateWithoutPagos_mpInput = {
+  fecha: Date | string
+  estado?: $Enums.estado_comanda
+  mesa: Prisma.mesaCreateNestedOneWithoutComandasInput
+  mozo: Prisma.usuarioCreateNestedOneWithoutComandasInput
+  medio_pago?: Prisma.medio_de_pagoCreateNestedOneWithoutComandasInput
+  detalles_comandas?: Prisma.detalle_comandaCreateNestedManyWithoutComandaInput
+}
+
+export type comandaUncheckedCreateWithoutPagos_mpInput = {
+  id?: number
+  fecha: Date | string
+  estado?: $Enums.estado_comanda
+  id_mesa: number
+  id_mozo: number
+  id_medio_pago?: number | null
+  detalles_comandas?: Prisma.detalle_comandaUncheckedCreateNestedManyWithoutComandaInput
+}
+
+export type comandaCreateOrConnectWithoutPagos_mpInput = {
+  where: Prisma.comandaWhereUniqueInput
+  create: Prisma.XOR<Prisma.comandaCreateWithoutPagos_mpInput, Prisma.comandaUncheckedCreateWithoutPagos_mpInput>
+}
+
+export type comandaUpsertWithoutPagos_mpInput = {
+  update: Prisma.XOR<Prisma.comandaUpdateWithoutPagos_mpInput, Prisma.comandaUncheckedUpdateWithoutPagos_mpInput>
+  create: Prisma.XOR<Prisma.comandaCreateWithoutPagos_mpInput, Prisma.comandaUncheckedCreateWithoutPagos_mpInput>
+  where?: Prisma.comandaWhereInput
+}
+
+export type comandaUpdateToOneWithWhereWithoutPagos_mpInput = {
+  where?: Prisma.comandaWhereInput
+  data: Prisma.XOR<Prisma.comandaUpdateWithoutPagos_mpInput, Prisma.comandaUncheckedUpdateWithoutPagos_mpInput>
+}
+
+export type comandaUpdateWithoutPagos_mpInput = {
+  fecha?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  estado?: Prisma.Enumestado_comandaFieldUpdateOperationsInput | $Enums.estado_comanda
+  mesa?: Prisma.mesaUpdateOneRequiredWithoutComandasNestedInput
+  mozo?: Prisma.usuarioUpdateOneRequiredWithoutComandasNestedInput
+  medio_pago?: Prisma.medio_de_pagoUpdateOneWithoutComandasNestedInput
+  detalles_comandas?: Prisma.detalle_comandaUpdateManyWithoutComandaNestedInput
+}
+
+export type comandaUncheckedUpdateWithoutPagos_mpInput = {
+  id?: Prisma.IntFieldUpdateOperationsInput | number
+  fecha?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  estado?: Prisma.Enumestado_comandaFieldUpdateOperationsInput | $Enums.estado_comanda
+  id_mesa?: Prisma.IntFieldUpdateOperationsInput | number
+  id_mozo?: Prisma.IntFieldUpdateOperationsInput | number
+  id_medio_pago?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  detalles_comandas?: Prisma.detalle_comandaUncheckedUpdateManyWithoutComandaNestedInput
+}
+
 export type comandaCreateWithoutMedio_pagoInput = {
   fecha: Date | string
   estado?: $Enums.estado_comanda
   mesa: Prisma.mesaCreateNestedOneWithoutComandasInput
   mozo: Prisma.usuarioCreateNestedOneWithoutComandasInput
   detalles_comandas?: Prisma.detalle_comandaCreateNestedManyWithoutComandaInput
+  pagos_mp?: Prisma.pago_mercadopagoCreateNestedManyWithoutComandaInput
 }
 
 export type comandaUncheckedCreateWithoutMedio_pagoInput = {
@@ -636,6 +714,7 @@ export type comandaUncheckedCreateWithoutMedio_pagoInput = {
   id_mesa: number
   id_mozo: number
   detalles_comandas?: Prisma.detalle_comandaUncheckedCreateNestedManyWithoutComandaInput
+  pagos_mp?: Prisma.pago_mercadopagoUncheckedCreateNestedManyWithoutComandaInput
 }
 
 export type comandaCreateOrConnectWithoutMedio_pagoInput = {
@@ -670,6 +749,7 @@ export type comandaCreateWithoutMesaInput = {
   mozo: Prisma.usuarioCreateNestedOneWithoutComandasInput
   medio_pago?: Prisma.medio_de_pagoCreateNestedOneWithoutComandasInput
   detalles_comandas?: Prisma.detalle_comandaCreateNestedManyWithoutComandaInput
+  pagos_mp?: Prisma.pago_mercadopagoCreateNestedManyWithoutComandaInput
 }
 
 export type comandaUncheckedCreateWithoutMesaInput = {
@@ -679,6 +759,7 @@ export type comandaUncheckedCreateWithoutMesaInput = {
   id_mozo: number
   id_medio_pago?: number | null
   detalles_comandas?: Prisma.detalle_comandaUncheckedCreateNestedManyWithoutComandaInput
+  pagos_mp?: Prisma.pago_mercadopagoUncheckedCreateNestedManyWithoutComandaInput
 }
 
 export type comandaCreateOrConnectWithoutMesaInput = {
@@ -713,6 +794,7 @@ export type comandaCreateWithoutDetalles_comandasInput = {
   mesa: Prisma.mesaCreateNestedOneWithoutComandasInput
   mozo: Prisma.usuarioCreateNestedOneWithoutComandasInput
   medio_pago?: Prisma.medio_de_pagoCreateNestedOneWithoutComandasInput
+  pagos_mp?: Prisma.pago_mercadopagoCreateNestedManyWithoutComandaInput
 }
 
 export type comandaUncheckedCreateWithoutDetalles_comandasInput = {
@@ -722,6 +804,7 @@ export type comandaUncheckedCreateWithoutDetalles_comandasInput = {
   id_mesa: number
   id_mozo: number
   id_medio_pago?: number | null
+  pagos_mp?: Prisma.pago_mercadopagoUncheckedCreateNestedManyWithoutComandaInput
 }
 
 export type comandaCreateOrConnectWithoutDetalles_comandasInput = {
@@ -746,6 +829,7 @@ export type comandaUpdateWithoutDetalles_comandasInput = {
   mesa?: Prisma.mesaUpdateOneRequiredWithoutComandasNestedInput
   mozo?: Prisma.usuarioUpdateOneRequiredWithoutComandasNestedInput
   medio_pago?: Prisma.medio_de_pagoUpdateOneWithoutComandasNestedInput
+  pagos_mp?: Prisma.pago_mercadopagoUpdateManyWithoutComandaNestedInput
 }
 
 export type comandaUncheckedUpdateWithoutDetalles_comandasInput = {
@@ -755,6 +839,7 @@ export type comandaUncheckedUpdateWithoutDetalles_comandasInput = {
   id_mesa?: Prisma.IntFieldUpdateOperationsInput | number
   id_mozo?: Prisma.IntFieldUpdateOperationsInput | number
   id_medio_pago?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  pagos_mp?: Prisma.pago_mercadopagoUncheckedUpdateManyWithoutComandaNestedInput
 }
 
 export type comandaCreateManyMozoInput = {
@@ -771,6 +856,7 @@ export type comandaUpdateWithoutMozoInput = {
   mesa?: Prisma.mesaUpdateOneRequiredWithoutComandasNestedInput
   medio_pago?: Prisma.medio_de_pagoUpdateOneWithoutComandasNestedInput
   detalles_comandas?: Prisma.detalle_comandaUpdateManyWithoutComandaNestedInput
+  pagos_mp?: Prisma.pago_mercadopagoUpdateManyWithoutComandaNestedInput
 }
 
 export type comandaUncheckedUpdateWithoutMozoInput = {
@@ -780,6 +866,7 @@ export type comandaUncheckedUpdateWithoutMozoInput = {
   id_mesa?: Prisma.IntFieldUpdateOperationsInput | number
   id_medio_pago?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   detalles_comandas?: Prisma.detalle_comandaUncheckedUpdateManyWithoutComandaNestedInput
+  pagos_mp?: Prisma.pago_mercadopagoUncheckedUpdateManyWithoutComandaNestedInput
 }
 
 export type comandaUncheckedUpdateManyWithoutMozoInput = {
@@ -804,6 +891,7 @@ export type comandaUpdateWithoutMedio_pagoInput = {
   mesa?: Prisma.mesaUpdateOneRequiredWithoutComandasNestedInput
   mozo?: Prisma.usuarioUpdateOneRequiredWithoutComandasNestedInput
   detalles_comandas?: Prisma.detalle_comandaUpdateManyWithoutComandaNestedInput
+  pagos_mp?: Prisma.pago_mercadopagoUpdateManyWithoutComandaNestedInput
 }
 
 export type comandaUncheckedUpdateWithoutMedio_pagoInput = {
@@ -813,6 +901,7 @@ export type comandaUncheckedUpdateWithoutMedio_pagoInput = {
   id_mesa?: Prisma.IntFieldUpdateOperationsInput | number
   id_mozo?: Prisma.IntFieldUpdateOperationsInput | number
   detalles_comandas?: Prisma.detalle_comandaUncheckedUpdateManyWithoutComandaNestedInput
+  pagos_mp?: Prisma.pago_mercadopagoUncheckedUpdateManyWithoutComandaNestedInput
 }
 
 export type comandaUncheckedUpdateManyWithoutMedio_pagoInput = {
@@ -837,6 +926,7 @@ export type comandaUpdateWithoutMesaInput = {
   mozo?: Prisma.usuarioUpdateOneRequiredWithoutComandasNestedInput
   medio_pago?: Prisma.medio_de_pagoUpdateOneWithoutComandasNestedInput
   detalles_comandas?: Prisma.detalle_comandaUpdateManyWithoutComandaNestedInput
+  pagos_mp?: Prisma.pago_mercadopagoUpdateManyWithoutComandaNestedInput
 }
 
 export type comandaUncheckedUpdateWithoutMesaInput = {
@@ -846,6 +936,7 @@ export type comandaUncheckedUpdateWithoutMesaInput = {
   id_mozo?: Prisma.IntFieldUpdateOperationsInput | number
   id_medio_pago?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   detalles_comandas?: Prisma.detalle_comandaUncheckedUpdateManyWithoutComandaNestedInput
+  pagos_mp?: Prisma.pago_mercadopagoUncheckedUpdateManyWithoutComandaNestedInput
 }
 
 export type comandaUncheckedUpdateManyWithoutMesaInput = {
@@ -863,10 +954,12 @@ export type comandaUncheckedUpdateManyWithoutMesaInput = {
 
 export type ComandaCountOutputType = {
   detalles_comandas: number
+  pagos_mp: number
 }
 
 export type ComandaCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   detalles_comandas?: boolean | ComandaCountOutputTypeCountDetalles_comandasArgs
+  pagos_mp?: boolean | ComandaCountOutputTypeCountPagos_mpArgs
 }
 
 /**
@@ -886,6 +979,13 @@ export type ComandaCountOutputTypeCountDetalles_comandasArgs<ExtArgs extends run
   where?: Prisma.detalle_comandaWhereInput
 }
 
+/**
+ * ComandaCountOutputType without action
+ */
+export type ComandaCountOutputTypeCountPagos_mpArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.pago_mercadopagoWhereInput
+}
+
 
 export type comandaSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
@@ -898,6 +998,7 @@ export type comandaSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs 
   mozo?: boolean | Prisma.usuarioDefaultArgs<ExtArgs>
   medio_pago?: boolean | Prisma.comanda$medio_pagoArgs<ExtArgs>
   detalles_comandas?: boolean | Prisma.comanda$detalles_comandasArgs<ExtArgs>
+  pagos_mp?: boolean | Prisma.comanda$pagos_mpArgs<ExtArgs>
   _count?: boolean | Prisma.ComandaCountOutputTypeDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["comanda"]>
 
@@ -940,6 +1041,7 @@ export type comandaInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs
   mozo?: boolean | Prisma.usuarioDefaultArgs<ExtArgs>
   medio_pago?: boolean | Prisma.comanda$medio_pagoArgs<ExtArgs>
   detalles_comandas?: boolean | Prisma.comanda$detalles_comandasArgs<ExtArgs>
+  pagos_mp?: boolean | Prisma.comanda$pagos_mpArgs<ExtArgs>
   _count?: boolean | Prisma.ComandaCountOutputTypeDefaultArgs<ExtArgs>
 }
 export type comandaIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
@@ -960,6 +1062,7 @@ export type $comandaPayload<ExtArgs extends runtime.Types.Extensions.InternalArg
     mozo: Prisma.$usuarioPayload<ExtArgs>
     medio_pago: Prisma.$medio_de_pagoPayload<ExtArgs> | null
     detalles_comandas: Prisma.$detalle_comandaPayload<ExtArgs>[]
+    pagos_mp: Prisma.$pago_mercadopagoPayload<ExtArgs>[]
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: number
@@ -1366,6 +1469,7 @@ export interface Prisma__comandaClient<T, Null = never, ExtArgs extends runtime.
   mozo<T extends Prisma.usuarioDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.usuarioDefaultArgs<ExtArgs>>): Prisma.Prisma__usuarioClient<runtime.Types.Result.GetResult<Prisma.$usuarioPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
   medio_pago<T extends Prisma.comanda$medio_pagoArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.comanda$medio_pagoArgs<ExtArgs>>): Prisma.Prisma__medio_de_pagoClient<runtime.Types.Result.GetResult<Prisma.$medio_de_pagoPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
   detalles_comandas<T extends Prisma.comanda$detalles_comandasArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.comanda$detalles_comandasArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$detalle_comandaPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  pagos_mp<T extends Prisma.comanda$pagos_mpArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.comanda$pagos_mpArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$pago_mercadopagoPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   /**
    * Attaches callbacks for the resolution and/or rejection of the Promise.
    * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -1842,6 +1946,30 @@ export type comanda$detalles_comandasArgs<ExtArgs extends runtime.Types.Extensio
   take?: number
   skip?: number
   distinct?: Prisma.Detalle_comandaScalarFieldEnum | Prisma.Detalle_comandaScalarFieldEnum[]
+}
+
+/**
+ * comanda.pagos_mp
+ */
+export type comanda$pagos_mpArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the pago_mercadopago
+   */
+  select?: Prisma.pago_mercadopagoSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the pago_mercadopago
+   */
+  omit?: Prisma.pago_mercadopagoOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.pago_mercadopagoInclude<ExtArgs> | null
+  where?: Prisma.pago_mercadopagoWhereInput
+  orderBy?: Prisma.pago_mercadopagoOrderByWithRelationInput | Prisma.pago_mercadopagoOrderByWithRelationInput[]
+  cursor?: Prisma.pago_mercadopagoWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.Pago_mercadopagoScalarFieldEnum | Prisma.Pago_mercadopagoScalarFieldEnum[]
 }
 
 /**

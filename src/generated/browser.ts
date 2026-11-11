@@ -23,6 +23,11 @@ export * from './enums';
  */
 export type usuario = Prisma.usuarioModel
 /**
+ * Model pago_mercadopago
+ * 
+ */
+export type pago_mercadopago = Prisma.pago_mercadopagoModel
+/**
  * Model medio_de_pago
  * 
  */

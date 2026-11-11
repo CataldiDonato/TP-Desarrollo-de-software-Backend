@@ -4,7 +4,7 @@ URL base: `http://localhost:3000/api` (en desarrollo)
 
 ## Autenticación
 
-Todas las rutas (menos `POST /auth/login`) piden un token en el header:
+Todas las rutas (menos `POST /auth/login` y `POST /webhooks/mercadopago`) piden un token en el header:
 
 ```
 Authorization: Bearer <token>
@@ -145,10 +145,12 @@ Reglas:
 | GET | `/comandas/:id` | — |
 | POST | `/comandas` | `{ id_mesa, detalles?: [{ id_producto, cantidad, observaciones? }] }` |
 | PATCH | `/comandas/:id/estado` | `{ estado: "Pagada", id_medio_pago }` o `{ estado: "Cancelada" }` |
+| POST | `/comandas/:id/mercadopago` | — genera el link de pago de Mercado Pago para mostrar como QR |
 
 - **Observaciones:** texto opcional por producto para la cocina (ej: "sin sal"), hasta 200 caracteres.
 - **Abrir (POST):** el mozo es el usuario logueado (sale del token). La mesa no puede tener otra comanda abierta. Se crea la comanda con sus productos en estado `Pendiente` y la mesa pasa a `Ocupada`, todo en una transacción.
-- **Cerrar (PATCH):** solo se puede cerrar una comanda `Abierta`. Para cobrar (`Pagada`) hace falta un medio de pago y al menos un producto. En los dos casos la mesa vuelve a `Libre` (también en una transacción).
+- **Cerrar (PATCH):** solo se puede cerrar una comanda `Abierta`. Para cobrar (`Pagada`) hace falta un medio de pago y al menos un producto. En los dos casos la mesa vuelve a `Libre` (también en una transacción). El medio `MercadoPago` no se acepta acá: lo asigna solo el webhook.
+- **Mercado Pago (POST `/comandas/:id/mercadopago`):** la comanda tiene que estar `Abierta` y tener productos. Crea una preferencia de Checkout Pro con el total calculado por el backend (vence a los 30 min) y responde `201` con `{ "preference_id": "...", "init_point": "https://...", "total": 24000 }`. La comanda **no** cambia de estado: se cierra cuando llega el webhook.
 
 Respuesta de `GET /comandas/:id`:
 ```json
@@ -217,6 +219,20 @@ Respuesta de `GET /cocina/comandas/:id`:
 | DELETE | `/medios-pago/:id` | A | — (no se puede si ya se usó para cobrar) |
 
 `tipo`: `Efectivo`, `Transferencia` o `Tarjeta`. No se puede cargar dos veces el mismo tipo.
+El medio `MercadoPago` lo crea el seed (o la migración a mano) y se usa solo para los cobros por QR.
+
+---
+
+## Webhooks — público (lo llama Mercado Pago)
+
+| Método | Ruta | Body |
+|---|---|---|
+| POST | `/webhooks/mercadopago` | Notificación de MP (`type`, `data.id`) |
+
+- No usa token: se valida la firma del header `x-signature` con `MP_WEBHOOK_SECRET`. Si no coincide, `401`.
+- Solo procesa eventos `payment`. Consulta el pago a MP y, si está `approved` y el monto coincide con el total, pasa la comanda a `Pagada` con medio `MercadoPago` y libera la mesa.
+- Responde `200` aunque ignore el evento; `500` solo si falla algo interno (MP reintenta).
+- Detalle completo en [MERCADOPAGO.md](MERCADOPAGO.md).
 
 ---
 

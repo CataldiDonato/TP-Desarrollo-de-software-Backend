@@ -30,6 +30,17 @@ model usuario {
   detalles_comanda detalle_comanda[]
 }
 
+model pago_mercadopago {
+  id            Int      @id @default(autoincrement())
+  id_comanda    Int
+  comanda       comanda  @relation(fields: [id_comanda], references: [id])
+  preference_id String
+  payment_id    String?  @unique   // lo completa el webhook
+  estado        String   @default("pending") // pending | approved | rejected | ...
+  monto         Decimal
+  creado_en     DateTime @default(now())
+}
+
 enum rol_usuario {
   Administrador
   Mozo
@@ -48,6 +59,7 @@ enum tipo_pago {
   Efectivo
   Transferencia
   Tarjeta
+  MercadoPago
 }
 
 model reserva {
@@ -110,6 +122,9 @@ model comanda {
 
   // Relacion con detalle_comanda
   detalles_comandas detalle_comanda[]
+
+  // Intentos de cobro con Mercado Pago
+  pagos_mp pago_mercadopago[]
 }
 
 enum estado_comanda {
