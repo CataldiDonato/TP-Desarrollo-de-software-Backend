@@ -1,5 +1,5 @@
 import express, { Application, NextFunction, Request, Response } from 'express';
-import cors from 'cors';
+import cors from 'cors'; 
 
 
 // 1. Importaciones de rutas de cada integrante
@@ -23,8 +23,8 @@ const app: Application = express();
 
 // 2. Middlewares (Configuraciones iniciales)
 const origenesPermitidos = process.env.CORS_ORIGIN?.split(',').map((origen) => origen.trim());
-app.use(cors({ origin: origenesPermitidos ?? true }));
-app.use(express.json()); 
+app.use(cors({ origin: origenesPermitidos ?? true })); // establece desde que orígenes puede acceder el navegado a la API (CORS)
+app.use(express.json()); //interpreta el cuerpo de las peticiones que envían JSON, para que esté disponible en req.body
   
 // 3. Ruta de estado (Health Check) - SIEMPRE FUNCIONA
 app.get('/', (req: Request, res: Response) => {

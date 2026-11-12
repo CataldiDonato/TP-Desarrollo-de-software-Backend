@@ -119,3 +119,4 @@ export function parseEstadoDetalle(value: unknown): EstadoDetalle {
 export function isPlainObject(value: unknown): value is Record<string, unknown> {
     return typeof value === 'object' && value !== null && !Array.isArray(value);
 }
+// basicamente todo este archivo contiene funciones de validación para distintos tipos de datos que se esperan en las solicitudes HTTP, como IDs positivos, fechas, correos electrónicos, roles de usuario y estados de detalles. Si los datos no cumplen con los criterios establecidos, se lanza un error con un mensaje descriptivo. Todo esto de forma generalizada para que se pueda reutilizar en distintos controladores y servicios del proyecto.

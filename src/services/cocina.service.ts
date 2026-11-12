@@ -17,17 +17,17 @@ export class CocinaService {
     async getPedidosActivos(estado?: unknown) {
         const filtro = estado === undefined || estado === ''
             ? undefined
-            : parseOpcion(estado, ESTADOS_ACTIVOS, 'estado');
+            : parseOpcion(estado, ESTADOS_ACTIVOS, 'estado'); 
 
         const pedidos = await repository.findPedidosActivos(filtro);
         const priority: Record<EstadoDetalle, number> = {
             Pendiente: 0,
             En_Preparacion: 1,
             Finalizada: 2
-        };
+        }; 
 
         return pedidos
-            .sort((a, b) => priority[a.estado as EstadoDetalle] - priority[b.estado as EstadoDetalle])
+            .sort((a, b) => priority[a.estado as EstadoDetalle] - priority[b.estado as EstadoDetalle]) // ordena primero los pendientes, luego los en preparación y por último los finalizados
             .map((pedido) => ({
                 idComanda: pedido.id_comanda,
                 idProducto: pedido.id_producto,
@@ -38,7 +38,7 @@ export class CocinaService {
                 comanda: pedido.comanda,
                 cocinero: pedido.cocinero
             }));
-    }
+    } // esto devuelve un array de objetos con los pedidos activos, ordenados por estado y con los datos del producto, la comanda y el cocinero que lo está preparando. Si no hay pedidos activos, devuelve un array vacío.
 
     async getComanda(id: number) {
         const comanda = await repository.findComanda(id);

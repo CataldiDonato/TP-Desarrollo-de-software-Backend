@@ -27,7 +27,7 @@ export class CocinaRepository {
             },
             orderBy: { id_comanda: 'asc' }
         });
-    }
+    } // devuelve un array de objetos con los pedidos activos, ordenados por id_comanda ascendente, y con los datos del producto, la comanda y el cocinero que lo está preparando. Si no hay pedidos activos, devuelve un array vacío.
 
     async findDetalle(idComanda: number, idProducto: number) {
         return prisma.detalle_comanda.findFirst({
