@@ -1,3 +1,4 @@
+import prisma from '../config/db';
 import { ProductoRepository } from '../repositories/productos.repository';
 import { CategoriaRepository } from '../repositories/categoria.repository';
 import { Precio_productoRepository } from '../repositories/precio_producto.repository';
@@ -71,13 +72,17 @@ export class ProductoService {
             throw new AppError(`Ya existe otro producto con el nombre "${datos.nombre}".`, 409);
         }
 
-        // Si el precio cambió, se agrega un registro nuevo al historial de precios.
-        const ultimoPrecio = await repositoryPrecio_producto.getUltimoPrecio(id);
-        if (!ultimoPrecio || Number(ultimoPrecio.precio) !== datos.precio) {
-            await repositoryPrecio_producto.create(id, datos.precio);
-        }
+        // El nuevo precio y los datos del producto se guardan en una sola transacción:
+        // si alguna de las operaciones falla, se deshacen todas y no quedan datos a medias.
+        return await prisma.$transaction(async (tx) => {
+            // Si el precio cambió, se agrega un registro nuevo al historial de precios.
+            const ultimoPrecio = await repositoryPrecio_producto.getUltimoPrecio(id, tx);
+            if (!ultimoPrecio || Number(ultimoPrecio.precio) !== datos.precio) {
+                await repositoryPrecio_producto.create(id, datos.precio, tx);
+            }
 
-        return await repository.update(id, datos);
+            return await repository.update(id, datos, tx);
+        });
     }
 
     async delete(id: number) {

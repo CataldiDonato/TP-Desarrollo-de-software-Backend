@@ -17,6 +17,7 @@ import mediosPagoRoutes from './routes/medio_pago.routes';
 import authRoutes from './routes/auth.routes';
 import webhookRoutes from './routes/webhook.routes';
 import { verificarToken } from './middlewares/auth.middleware';
+import { AppError } from './utils/app-error';
 
 
 const app: Application = express();
@@ -36,35 +37,52 @@ app.get('/', (req: Request, res: Response) => {
 });
 
 // 4. Registro de endpoints de la API
+// Rutas públicas: login y webhook de Mercado Pago (este último valida su propia firma).
 app.use('/api/auth', authRoutes);
-app.use('/api/webhooks', webhookRoutes);   // ← acá
-app.use(verificarToken);
+app.use('/api/webhooks', webhookRoutes);
 
-app.use('/api/categorias', categoriasRoutes);
-app.use('/api/productos', productosRoutes);
-app.use('/api/precio-producto', precioProducto);
-app.use('/api/detalle-comanda', detalleComanda);
-app.use('/api/mesas', mesasRoutes);
-app.use('/api/reservas', reservasRoutes);
-app.use('/api/comandas', comandasRoutes);
-app.use('/api/usuarios', usuariosRoutes);
-app.use('/api/cocina', cocinaRoutes);
-app.use('/api/dashboard', dashboardRoutes);
-app.use('/api/medios-pago', mediosPagoRoutes);
+// Rutas protegidas: verificarToken se aplica por ruta y no a nivel aplicación, así una ruta que
+// no existe llega al manejador de 404 en lugar de cortarse con un 401.
+app.use('/api/categorias', verificarToken, categoriasRoutes);
+app.use('/api/productos', verificarToken, productosRoutes);
+app.use('/api/precio-producto', verificarToken, precioProducto);
+app.use('/api/detalle-comanda', verificarToken, detalleComanda);
+app.use('/api/mesas', verificarToken, mesasRoutes);
+app.use('/api/reservas', verificarToken, reservasRoutes);
+app.use('/api/comandas', verificarToken, comandasRoutes);
+app.use('/api/usuarios', verificarToken, usuariosRoutes);
+app.use('/api/cocina', verificarToken, cocinaRoutes);
+app.use('/api/dashboard', verificarToken, dashboardRoutes);
+app.use('/api/medios-pago', verificarToken, mediosPagoRoutes);
 
-//rutas no existentes
+// Rutas no existentes
 app.use((req: Request, res: Response) => {
   res.status(404).json({
     message: `La ruta '${req.originalUrl}' no existe en este servidor.`
   });
 });
 
-//Manejo de errores 
-
+// 5. Manejo de errores no controlados.
+// Express reconoce que es un manejador de errores porque recibe 4 parámetros.
+// Respeta el código HTTP que trae el error (401, 403, 404, 409, etc.) y solo responde 500
+// cuando el error es realmente inesperado.
 app.use((error: any, req: Request, res: Response, _next: NextFunction) => {
-  if (error.type === 'entity.parse.failed') {
+  // JSON mal escrito en el body
+  if (error?.type === 'entity.parse.failed') {
     return res.status(400).json({ message: 'El cuerpo de la solicitud no es un JSON válido.' });
   }
+
+  // Errores propios de la aplicación (AppError) con su código y mensaje
+  if (error instanceof AppError) {
+    return res.status(error.statusCode).json({ message: error.message });
+  }
+
+  // Errores de Express / body-parser que ya traen un código 4xx (ej: 413 body demasiado grande)
+  const status = error?.status ?? error?.statusCode;
+  if (typeof status === 'number' && status >= 400 && status < 500) {
+    return res.status(status).json({ message: error.expose && error.message ? error.message : 'La solicitud no es válida.' });
+  }
+
   console.error(error);
   return res.status(500).json({ message: 'Ocurrió un error interno al procesar la solicitud.' });
 });

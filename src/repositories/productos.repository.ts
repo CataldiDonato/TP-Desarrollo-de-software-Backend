@@ -1,5 +1,9 @@
 import prisma from '../config/db';
 import type { DatosProducto } from '../services/producto.service';
+import type { Prisma } from '../generated/client';
+
+// Cliente de base de datos: el prisma global o el de una transacción en curso.
+type DbClient = Prisma.TransactionClient;
 
 export class ProductoRepository {
     // Trae cada producto con su categoría y solo su precio más reciente (el vigente).
@@ -37,8 +41,8 @@ export class ProductoRepository {
     }
 
     // El precio no se guarda en producto: se maneja aparte en precio_producto.
-    async update(id: number, datos: DatosProducto) {
-        return await prisma.producto.update({
+    async update(id: number, datos: DatosProducto, db: DbClient = prisma) {
+        return await db.producto.update({
             where: { id },
             data: {
                 nombre: datos.nombre,

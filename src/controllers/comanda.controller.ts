@@ -3,8 +3,10 @@ import type { Request, Response } from "express"; // Importa los tipos Request y
 import { comandaService } from "../services/comanda.service"; //Llama a la clase comandaService para poder usar sus metodos
 import { getErrorResponse } from "../utils/app-error";
 import { parsePositiveId } from "../utils/validation";
+import { mercadopagoService } from "../services/mercadopago.service";
 
 const service = new comandaService();
+const mpService = new mercadopagoService();
 
 export class comandaController {
 
@@ -39,6 +41,16 @@ export class comandaController {
         try {
             const id = parsePositiveId(req.params.id, 'id');
             return res.status(200).json(await service.cambiarEstado(id, req.body));
+        } catch (error) {
+            return this.sendError(res, error);
+        }
+    }
+
+    // POST /comandas/:id/mercadopago → genera la preferencia de pago (QR / link) de la comanda
+    async crearPagoMercadoPago(req: Request, res: Response) {
+        try {
+            const id = parsePositiveId(req.params.id, 'id');
+            return res.status(201).json(await mpService.crearPreferencia(id));
         } catch (error) {
             return this.sendError(res, error);
         }

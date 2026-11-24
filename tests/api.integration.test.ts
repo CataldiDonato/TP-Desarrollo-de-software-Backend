@@ -48,6 +48,18 @@ test('el login con datos incompletos devuelve 400', async () => {
     assert.equal(res.status, 400);
 });
 
+test('una ruta inexistente devuelve 404 aunque no se mande token', async () => {
+    const res = await fetch(`${url}/api/no-existe`);
+    assert.equal(res.status, 404);
+});
+
+test('un usuario con un rol sin permiso recibe 403', async () => {
+    const res = await fetch(`${url}/api/usuarios`, {
+        headers: { Authorization: `Bearer ${tokenDe('Mozo')}` }
+    });
+    assert.equal(res.status, 403);
+});
+
 test('el login con credenciales incorrectas devuelve 401', async () => {
     const res = await fetch(`${url}/api/auth/login`, {
         method: 'POST',
